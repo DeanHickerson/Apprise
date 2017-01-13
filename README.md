@@ -1,6 +1,6 @@
 # Apprise
 
-Apprise, much like the definition of the word, is a tool to inform a group of people. I originally developed the tool as an alert system that could broad cast to a user base.
+Apprise, much like the definition of the word, is a tool to inform a group of people. I originally developed the tool as an alert system that could broadcast to a user base.
 
 The basic framework can be used for just about anything that needs to pass information from the web to a server's file system.
 

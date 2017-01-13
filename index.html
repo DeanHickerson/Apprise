@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Apprise</title>
+    <meta name="description" content="Stay Apprised of the situation">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="icon" href="/img/favicon.png" type="image/gif" sizes="32x32">
+
+    <!--
+        Built by Dean Hickerson for Service Desk
+    	2016
+    -->
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,300italic,400italic,700,700italic,100italic">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,300italic,400italic,600italic|Open+Sans+Condensed:300">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Apprise</h1>
+    </header>
+
+    <section>
+        <div class="flex-row main">
+            <div class="flex-col half one">
+                <h3>New Alert</h3>
+                <form action="functions.php" id="msgForm" name="msgForm">
+                    <span><i class="fa fa-id-badge" aria-hidden="true"></i><label for"empId">User ID: </label></span>
+                    <input name="empId" type="text" placeholder="ex: 38469" minlength="5" maxlength="5" required>
+
+                    <div class="form-duplicated-elements">
+                        <div class="form-duplicate-this">
+                            <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="startDate">Start Date: </label></span>
+                            <input name="startDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date" required>
+                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="startTime">Start Time (eastern): </label></span>
+                            <input name="startTime" class="" type="text" autocomplete="on" placeholder="HHmm (e.g., 1630)" minlength="4" maxlength="4" required>
+
+                            <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="endDate">End Date: </label></span>
+                            <input name="endDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date">
+                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="endTime">End Time: </label></span>
+                            <input name="endTime" class="" type="number" autocomplete="on" placeholder="End Time" minlength="4" maxlength="4">
+
+                            <span><i class="fa fa-comment-o" aria-hidden="true"></i><label for="message">Message: </label></span>
+                            <textarea name="message" autocomplete="off" placeholder="ex: All Enterprise Systems and applications are operational." required></textarea>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-controls">
+                    <button id="submit" disabled="disabled">Submit</button>
+                    <div class="form-button disabled">
+                        <span class="add-more-messages" title="Add another alert">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Add another message.
+                        </span>
+                    </div>
+                    <div class="form-button disabled">
+                        <span class="remove-last-message" title="Remove the last alert">
+                            <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove last message.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-col half two">
+                <h3>Current Message:</h3>
+                <div id="currentMessage"></div>
+            </div>
+        </div>
+
+        <table class="table table-hover" id="return-table" width="100%">
+            <colgroup>
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:15%;">
+                <col style="width:55%;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <script id="entry-template" type="text/x-handlebars-template">
+        <tr>
+            <td>{{empId}}</td>
+            <td>{{startDate}}</td>
+            <td>{{endDate}}</td>
+            <td>{{message}}</td>
+        </tr>
+    </script>
+
+    <footer>
+        <div class="flex-row footer">
+            <div class="flex-col third one">
+                <h3>Footer Item</h3>
+                <p>Item Content.</p>
+            </div>
+            <div class="flex-col third two">
+                <h3>Footer Item</h3>
+                <p>Item Content.</p>
+            </div>
+            <div class="flex-col third three">
+                <h3>Footer Item</h3>
+                <p>Item Content.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="js/jquery/jquery-3.1.1.min.js"></script>
+    <script src="js/jqueryvalidation/jquery.validate.js"></script>
+    <script src="js/jqueryui/jquery-ui-datepicker.min.js"></script>
+    <script src="js/momentjs/moment-with-locales.min.js"></script>
+    <script src="js/momentjs/moment-timezone-with-data.min.js"></script>
+    <script src="js/handlebars/handlebars-v4.0.5.js"></script>
+    <script src="js/custom.js"></script>
+
+</body>
+
+</html>
