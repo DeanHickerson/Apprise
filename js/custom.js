@@ -47,11 +47,11 @@
                         // if (i < 5) {
                         addTableRow(el);
                     }
-                })
+                });
             }).done(function() {
                 console.log("call and loop success");
             }).fail(function() {
-                console.log("error");
+                console.error("error");
             }).always(function() {
                 console.log("complete");
             });
@@ -297,7 +297,7 @@
 
         // converts form input date & time into unix timestamp
         function getTimestamp(formattedDate) {
-            // TODO
+            // TODO Do we need this?
         };
 
         // converts unix timestamp to human readable EST date & time

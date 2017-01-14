@@ -1,139 +1,113 @@
 body {
-    background-color: white;
-    font-family: Roboto, sans-serif;
-    font-weight: 300;
-    box-sizing: border-box;
-    max-width: 100vw;
-    max-height: 100vh;
-    margin: 0;
-}
+  background-color: white;
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  box-sizing: border-box;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0; }
 
 header {
-    width: 100%;
-    min-height: 15vh;
-    text-align: center;
-}
+  width: 100%;
+  min-height: 15vh;
+  text-align: center; }
 
 section {
-    width: 80%;
-    min-height: 60vh;
-    margin: auto;
-    padding: 0.5rem;
-}
+  width: 80%;
+  min-height: 60vh;
+  margin: auto;
+  padding: 0.5rem; }
 
 table th, table td {
-    text-align: left;
-}
-
+  text-align: left; }
 
 /* FOUNDATION */
 .flex-row {
-    display: flex;
-    flex-direction: row;
-    margin: auto;
-}
+  display: flex;
+  flex-direction: row;
+  margin: auto; }
 
 .flex-col {
-    display: flex;
-    flex-direction: column;
-}
-
+  display: flex;
+  flex-direction: column; }
 
 /* end foundation */
-
 .main {
-    justify-content: space-around;
-}
+  justify-content: space-around; }
 
 .half {
-    width: 50%;
-    padding: 0.5rem;
-}
+  width: 50%;
+  padding: 0.5rem; }
 
 .half label {
-    font-weight: bold;
-}
+  font-weight: bold; }
 
 form span {
-    display: block;
-}
+  display: block; }
 
 form span.inline {
-    display: inline-block;
-}
+  display: inline-block; }
 
 form input {
-    font-family: Roboto, sans-serif;
-    font-weight: 300;
-    font-size: 1.2rem;
-    margin: 0.1rem;
-    padding: 0.1rem;
-    height: 1.5rem;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-}
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  font-size: 1.2rem;
+  margin: 0.1rem;
+  padding: 0.1rem;
+  height: 1.5rem;
+  border-radius: 3px;
+  border: 1px solid #ccc; }
 
 form textarea {
-    font-family: Roboto, sans-serif;
-    font-weight: 300;
-    font-size: 1.2rem;
-    margin: 0.1rem;
-    padding: 0.25rem;
-    width: 100%;
-    height: 10rem;
-    resize: none;
-    border-radius: 3px;
-    border: 1px solid #ccc;
-}
+  font-family: Roboto, sans-serif;
+  font-weight: 300;
+  font-size: 1.2rem;
+  margin: 0.1rem;
+  padding: 0.25rem;
+  width: 100%;
+  height: 10rem;
+  resize: none;
+  border-radius: 3px;
+  border: 1px solid #ccc; }
 
 form input.error, form textarea.error {
-    border: 1px solid #f00;
-}
+  border: 1px solid #f00; }
 
 form label.error {
-    color: #f00;
-    font-size: 10pt;
-}
+  color: #f00;
+  font-size: 10pt; }
 
 .fa-clock-o,
 .fa-id-badge,
 .fa-calendar,
 .fa-comment-o {
-    font-size: 1.4rem;
-    margin: 0.4rem;
-}
+  font-size: 1.4rem;
+  margin: 0.4rem; }
 
 .form-button .add-more-messages,
 .form-button .remove-last-message {
-    cursor: pointer;
-}
+  cursor: pointer; }
 
 .form-button.disabled .add-more-messages,
 .form-button.disabled .remove-last-message {
-    color: #ccc;
-    cursor: not-allowed;
-}
+  color: #ccc;
+  cursor: not-allowed; }
 
 .third {
-    width: 33%;
-    padding: 0.5rem;
-}
+  width: 33%;
+  padding: 0.5rem; }
 
 .footer {
-    justify-content: space-around;
-}
+  justify-content: space-around; }
 
 footer {
-    width: 80%;
-    margin: auto;
-    padding: 0.5rem;
-}
+  width: 80%;
+  margin: auto;
+  padding: 0.5rem; }
 
 .footer .third.two {
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-}
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc; }
 
 footer .third h3 {
-    text-align: center;
-}
+  text-align: center; }

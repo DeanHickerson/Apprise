@@ -15,6 +15,15 @@
 		"oAP": "\/.gitignore",
 		"oF": 0
 		},
+	"\/app.js": {
+		"ft": 64,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "\/min\/app-min.js",
+		"oF": 0,
+		"sC": 1,
+		"tS": 0
+		},
 	"\/css\/custom.css": {
 		"aP": 0,
 		"bl": 0,
@@ -84,6 +93,29 @@
 		"oAP": "\/css\/jquery-ui.theme.min-min.css",
 		"oF": 0,
 		"oS": 0
+		},
+	"\/css\/main.min.css": {
+		"aP": 0,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 2,
+		"oAP": "\/css\/main.min-min.css",
+		"oF": 0,
+		"oS": 0
+		},
+	"\/css\/main.scss": {
+		"aP": 1,
+		"bl": 0,
+		"dP": 10,
+		"dS": 0,
+		"ft": 4,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "\/css\/main.min.css",
+		"oF": 2,
+		"oS": 3,
+		"uL": 1
 		},
 	"\/endpoint.php": {
 		"ft": 8192,
@@ -185,13 +217,22 @@
 		"oAP": "\/index.html",
 		"oF": 0
 		},
+	"\/js\/app.js": {
+		"ft": 64,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "\/js\/min\/app-min.js",
+		"oF": 0,
+		"sC": 1,
+		"tS": 0
+		},
 	"\/js\/custom.js": {
 		"ft": 64,
 		"mi": 1,
 		"oA": 0,
-		"oAP": "\/js\/min\/custom-min.js",
-		"oF": 0,
-		"sC": 1,
+		"oAP": "\/js\/app.js",
+		"oF": 2,
+		"sC": 0,
 		"tS": 0
 		},
 	"\/js\/handlebars\/handlebars-v4.0.5.js": {
