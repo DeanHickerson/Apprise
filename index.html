@@ -23,7 +23,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.min.css">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="stylesheet" type="text/css" href="css/main.min.css">
 </head>
 
 <body>
@@ -79,16 +79,20 @@
 
         <table class="table table-hover" id="return-table" width="100%">
             <colgroup>
-                <col style="width:15%;">
-                <col style="width:15%;">
-                <col style="width:15%;">
-                <col style="width:55%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:10%;">
+                <col style="width:50%;">
             </colgroup>
             <thead>
                 <tr>
                     <th>Employee ID</th>
                     <th>Start Date</th>
+                    <th>Start Time</th>
                     <th>End Date</th>
+                    <th>End Time</th>
                     <th>Message</th>
                 </tr>
             </thead>
@@ -100,7 +104,9 @@
         <tr>
             <td>{{empId}}</td>
             <td>{{startDate}}</td>
+            <td>{{startTime}}</td>
             <td>{{endDate}}</td>
+            <td>{{endTime}}</td>
             <td>{{message}}</td>
         </tr>
     </script>
@@ -129,7 +135,7 @@
     <script src="js/momentjs/moment-with-locales.min.js"></script>
     <script src="js/momentjs/moment-timezone-with-data.min.js"></script>
     <script src="js/handlebars/handlebars-v4.0.5.js"></script>
-    <script src="js/app.js"></script>
+    <script src="custom.js"></script>
 
 </body>
 

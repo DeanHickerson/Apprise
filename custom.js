@@ -57,10 +57,33 @@
             });
         };
 
+        // NOTE: This will fail to build the table if the log.json file is not correctly syntaxed, like a bad bracket in the middle of the object.
+
         // momentjs test code
         var rightNow = moment();
-        console.log("CST: " + rightNow.format());
+        // console.log("CST: " + rightNow.format());
         console.log("EST: " + rightNow.tz("America/New_York").format());
+        // Get the current time in DST format
+        var curTime = moment.tz(rightNow,'America/New_York').format();
+        console.log(curTime);
+
+        // Check for DST and provide a variable to add to text
+        var curDst = '';
+        function zoneCheck(){
+            if(curTime.isDST){
+                curDst = 'EST';
+                console.log('We are currently on EST');
+            } else {
+                curDst = 'EDT';
+                console.log('We are currently on EDT');
+            }
+        }
+
+        // TODO: We need to set the DST ending to the time that the user enters
+        // $('[name="startTime"]').on('blur', function(){
+        //     $('[name="startTime"]').val() += ' ' + curDst;
+        // });
+
 
         // Do not cache data
         $.ajaxSetup({
@@ -79,7 +102,6 @@
 
         // form submit function
         function submit() {
-            $('[name="startTime"]').val() + ' ' + 'EDT';
             var $form = $('#msgForm'),
                 isValid = $form.valid();
             console.log("Form is valid? " + isValid);
@@ -149,9 +171,6 @@
             return o;
         };
 
-        /*
-         * NEW CODE BELOW
-         */
 
         // checks all "textarea" elements on page, if any are blank, sets "formValid" to false, otherwise to "true"
         function validateAllTextareas() {

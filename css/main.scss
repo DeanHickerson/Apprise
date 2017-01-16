@@ -71,6 +71,11 @@ form input {
     height: 1.5rem;
     border-radius: 3px;
     border: 1px solid #ccc;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+    transition: all ease-in-out 0.2s;
+    &:focus {
+        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.14), 0 3px 15px 0 rgba(0,0,0,0.12), 0 9px 3px -6px rgba(0,0,0,0.2);
+    }
 }
 
 form textarea {
@@ -79,11 +84,16 @@ form textarea {
     font-size: 1.2rem;
     margin: 0.1rem;
     padding: 0.25rem;
-    width: 100%;
+    width: 97%;
     height: 10rem;
     resize: none;
     border-radius: 3px;
     border: 1px solid #ccc;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+    transition: all ease-in-out 0.2s;
+    &:focus {
+        box-shadow: 0 6px 6px 0 rgba(0,0,0,0.14), 0 3px 15px 0 rgba(0,0,0,0.12), 0 9px 3px -6px rgba(0,0,0,0.2);
+    }
 }
 
 form input.error, form textarea.error {
@@ -93,6 +103,18 @@ form input.error, form textarea.error {
 form label.error {
     color: #f00;
     font-size: 10pt;
+}
+
+/*
+    Focus removal... I know this is frowned upon
+    but I want a better looking solution
+*/
+input:focus,
+textarea:focus,
+keygen:focus,
+select:focus {
+    outline-offset: 0;
+    outline: -webkit-focus-ring-color auto 0px;
 }
 
 .fa-clock-o,
@@ -117,6 +139,12 @@ form label.error {
 .third {
     width: 33%;
     padding: 0.5rem;
+}
+
+#return-table {
+    color: #404040;
+    th {background-color: lightblue}
+    tr:nth-child(odd) {background-color: #efefef}
 }
 
 .footer {
