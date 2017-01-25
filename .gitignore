@@ -40,3 +40,7 @@ README.html
 # End of https://www.gitignore.io/api/macos,codekit
 
 *.codekit3
+
+*config.codekit3
+
+config.codekit3
