@@ -43,6 +43,8 @@
                 // var reverseJSON = data.reverse();
                 var count = data.length;
                 $.each(data, function(i, el) {
+                    this.startTime += ' ' + curDst;
+                    this.endTime += ' ' + curDst;
                     if (i >= count - 5) {
                         // if (i < 5) {
                         addTableRow(el);
@@ -77,12 +79,11 @@
                 curDst = 'EDT';
                 console.log('We are currently on EDT');
             }
+            return curDst;
         }
 
-        // TODO: We need to set the DST ending to the time that the user enters
-        // $('[name="startTime"]').on('blur', function(){
-        //     $('[name="startTime"]').val() += ' ' + curDst;
-        // });
+        // Check for DST and create DST variable
+        zoneCheck();
 
 
         // Do not cache data

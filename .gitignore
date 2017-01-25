@@ -29,6 +29,7 @@ Temporary Items
 ### CodeKit ###
 # General CodeKit files to ignore
 config.codekit
+config.codekit3
 README.html
 /min
 
