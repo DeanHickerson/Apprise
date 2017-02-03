@@ -43,8 +43,8 @@
                 // var reverseJSON = data.reverse();
                 var count = data.length;
                 $.each(data, function(i, el) {
-                    this.startTime += ' ' + curDst;
-                    this.endTime += ' ' + curDst;
+                    this.startTime += ' ' + curDST;
+                    this.endTime += ' ' + curDST;
                     if (i >= count - 5) {
                         // if (i < 5) {
                         addTableRow(el);
@@ -67,23 +67,39 @@
         console.log("EST: " + rightNow.tz("America/New_York").format());
         // Get the current time in DST format
         var curTime = moment.tz(rightNow,'America/New_York').format();
-        console.log(curTime);
+        var date = moment.tz(rightNow,'America/New_York').format("M/D/YYYY");
+        var tomorrow = moment().add(1, 'days');
+        var tomorrowDate = moment.tz(tomorrow,'America/New_York').format("M/D/YYYY");
 
         // Check for DST and provide a variable to add to text
-        var curDst = '';
+        var curDST;
         function zoneCheck(){
             if(curTime.isDST){
-                curDst = 'EST';
+                curDST = 'EST';
                 console.log('We are currently on EST');
             } else {
-                curDst = 'EDT';
+                curDST = 'EDT';
                 console.log('We are currently on EDT');
             }
-            return curDst;
+            return curDST;
         }
-
         // Check for DST and create DST variable
         zoneCheck();
+        // Lets check for special dates to warn for
+        var regular;
+        var early;
+        $.getJSON("dates.json",function(dates){
+            $.each(dates.regular,function(i,a){
+                if(tomorrowDate === a){
+                    return regular = true;
+                }
+            });
+            $.each(dates.early,function(i,a){
+                if(date === a){
+                    return early = true;
+                }
+            });
+        });
 
 
         // Do not cache data
@@ -123,13 +139,11 @@
                     },
                     dataType: 'json',
                     type: 'POST',
-                    beforeSend: function(xhr) {
-                        //xhr.setRequestType('application/json');
-                    }
+                    // beforeSend: function(xhr) {
+                    //     xhr.setRequestType('application/json');
+                    // }
                 }).done(function(data) {
                     console.log("success");
-                    // console.log(data);
-
                     // do stuff with our variables
                     addTableRow(data.json);
                 }).fail(function(jqXHR) {
