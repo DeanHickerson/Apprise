@@ -1,15 +1,2 @@
-[
-    {"empId":"21992","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"This is a test message, for testing purposes only."},
-    {"empId":"21992","startDate":"01/10/2017","startTime":"1235","endDate":"","endTime":"","message":"console.log(\"success\"); console.log(data);"},{"empId":"12345","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdfasdfasdfasdf"},
-{"empId":"12345","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdfasdfasdfasdf"},
-{"empId":"12345","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdfasdfasdfasdf"},
-{"empId":"12345","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdfasdfasdfasdf"},
-{"empId":"21992","startDate":"01/11/2017","startTime":"0600","endDate":"","endTime":"","message":"This is the start of the work day for some people..."},
-{"empId":"21992","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"This should still show up..."},
-{"empId":"21992","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdf"},
-{"empId":"21992","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"asdfasdfasdfasdfasdfasdfasdfasdfasdf"},
-{"empId":"12345","startDate":"01/10/2017","startTime":"1234","endDate":"","endTime":"","message":"12341234"},
-{"empId":"12335","startDate":"01/13/2017","startTime":"1130","endDate":"","endTime":"","message":"Test of timezone value retrieve"},
-{"empId":"12345","startDate":["01/13/2017","01/13/2017"],"startTime":["1135","1130"],"endDate":["",""],"endTime":["",""],"message":["test of time zone with 2 messages.",""]},
-{"empId":"12345","startDate":"01/13/2017","startTime":"1139","endDate":"","endTime":"","message":"test concat"},
-{"empId":"12345","startDate":"01/13/2017","startTime":"1134","endDate":"","endTime":"","message":"Testing"},{"empId":"12344","startDate":["01/13/2017","01/13/2017"],"startTime":["1133","1134"],"endDate":["",""],"endTime":["",""],"message":["test 1 message","second message"]},{"empId":"12345","startDate":["01/13/2017","01/13/2017"],"startTime":["1230","1232"],"endDate":["",""],"endTime":["",""],"message":["test 1","test2"]}]
+[{"dateWarn":"true","msgId":"12345","info":[{"startDate":"02/06/2017","startTime":"1130 EDT","endDate":"","endTime":"","message":"test"}]}]
+,{"dateWarn":"true","msgId":"40263","info":[{"startDate":"02/06/2017","startTime":"1130 EDT","endDate":"","endTime":"","message":"test1"}]}]

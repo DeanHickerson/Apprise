@@ -2,13 +2,17 @@
     'use strict';
     $(document).ready(function() {
 
+        // Do not cache data
+        $.ajaxSetup({
+            cache: false
+        });
+
         // declare constants
         var DUPLICATE_CLASS = '.form-duplicate-this';
         var formValid = false;
 
-        // define template for adding new entries
-        var source = $("#entry-template").html();
-        var template = Handlebars.compile(source);
+        var theLog;
+        var logReady;
 
         // init form validation
         var $form = $('form#msgForm');
@@ -32,71 +36,57 @@
         // init textarea validation (on page load)
         $('textarea[name=message]').on('input', validateAllTextareas);
 
-        // init log entries
-        initializeLogTable();
-
-        // initializes the log table with data from log.json
-        function initializeLogTable() {
-            console.log("ajax call to get json for log...");
-            $.getJSON("log.json", function(data) {
-                console.log("call success");
-                // var reverseJSON = data.reverse();
-                var count = data.length;
-                $.each(data, function(i, el) {
-                    this.startTime += ' ' + curDst;
-                    this.endTime += ' ' + curDst;
-                    if (i >= count - 5) {
-                        // if (i < 5) {
-                        addTableRow(el);
-                    }
-                });
-            }).done(function() {
-                console.log("call and loop success");
-            }).fail(function() {
-                console.error("error");
-            }).always(function() {
-                console.log("complete");
-            });
-        };
-
-        // NOTE: This will fail to build the table if the log.json file is not correctly syntaxed, like a bad bracket in the middle of the object.
 
         // momentjs test code
         var rightNow = moment();
         // console.log("CST: " + rightNow.format());
         console.log("EST: " + rightNow.tz("America/New_York").format());
         // Get the current time in DST format
-        var curTime = moment.tz(rightNow,'America/New_York').format();
-        console.log(curTime);
+        var curTime = moment.tz(rightNow,'America/New_York').format("HH:mm");
+        var date = moment.tz(rightNow,'America/New_York').format("M/D/YYYY");
+        var tomorrow = moment().add(1, 'days');
+        var tomorrowDate = moment.tz(tomorrow,'America/New_York').format("M/D/YYYY");
 
         // Check for DST and provide a variable to add to text
-        var curDst = '';
+        var curDST;
         function zoneCheck(){
             if(curTime.isDST){
-                curDst = 'EST';
+                curDST = 'EST';
                 console.log('We are currently on EST');
             } else {
-                curDst = 'EDT';
+                curDST = 'EDT';
                 console.log('We are currently on EDT');
             }
-            return curDst;
+            return curDST;
         }
-
         // Check for DST and create DST variable
         zoneCheck();
-
-
-        // Do not cache data
-        $.ajaxSetup({
-            cache: false
+        // Lets check for special dates to warn for
+        var regular;
+        var early;
+        $.getJSON("dates.json",function(dates){
+            $.each(dates.regular,function(i,a){
+                if(tomorrowDate === a){
+                    return regular = true;
+                }
+            });
+            $.each(dates.early,function(i,a){
+                if(date === a){
+                    return early = true;
+                }
+            });
         });
+
+
         // Get current Alert Message
         setTimeout(function() {
-            $.get('./results.json', function(data) {
+            $.getJSON('./results.json', function(data) {
                 var output = '';
-                for(var i = 0; i < data.startDate.length; i++) {
-                    output += '<p>' + data.startDate[i] + ' ' + data.startTime[i] + ' ' + data.message[i] + '</p>';
-                }
+                $.each(data.info,function(index,value){
+                    output += '<p>' + value.startDate + ' ';
+                    output += value.startTime + ' ';
+                    output += value.message + '</p>';
+                });
                 $('#currentMessage').html(output);
             });
         }, 2000);
@@ -107,9 +97,22 @@
                 isValid = $form.valid();
             console.log("Form is valid? " + isValid);
             if (isValid) {
-                var formData = $('#msgForm').serializeObject();
+                var msgId = $('input[name=empId]').val();
+                var formData = {};
+                if (regular) {
+                    formData.dateWarn = "true";
+                }
+                formData.msgId = msgId;
+                formData.info = $('.form-duplicate-this').serializeObject();
+                $.each(formData.info,function(index,value){
+                    value.startTime += ' ' + curDST;
+                    if (value.endTime !== '') {
+                        value.endTime += ' ' + curDST;
+                    }
+                });
                 console.log(formData);
                 var postData = JSON.stringify(formData);
+                console.log(postData);
                 // TODO: this can maybe go away
                 var timestamp = moment().unix();
                 console.log("Right now is: " + timestamp);
@@ -123,15 +126,14 @@
                     },
                     dataType: 'json',
                     type: 'POST',
-                    beforeSend: function(xhr) {
-                        //xhr.setRequestType('application/json');
-                    }
+                    // beforeSend: function(xhr) {
+                    //     xhr.setRequestType('application/json');
+                    // }
                 }).done(function(data) {
                     console.log("success");
-                    // console.log(data);
-
                     // do stuff with our variables
-                    addTableRow(data.json);
+                    // addTableRow(data.json);
+
                 }).fail(function(jqXHR) {
                     console.log("fail");
                     // console.log(jqXHR);
@@ -143,34 +145,25 @@
             }
         };
 
-        // define table update method
-        function addTableRow(jsonData) {
-            var $table = $('#return-table');
-
-            // we actually have a table to update
-            if ($table.length > 0) {
-                console.log("updating table...");
-                var $body = $table.find('tbody'),
-                    html = template(jsonData);
-                $body.append(html);
-            }
-        };
 
         $.fn.serializeObject = function() {
-            var o = {};
-            var a = this.serializeArray();
-            $.each(a, function() {
-                if (o[this.name] !== undefined) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
-                }
+            var array = [];
+            $(this).each(function(index,value) {
+                var object = {};
+                $.each($(value).find('input'), function(key, value) {
+                    var name = $(value).attr('name');
+                    var val = $(value).val();
+                    object[name] = val;
+                });
+                $.each($(value).find('textarea'), function(key, value) {
+                    var name = $(value).attr('name');
+                    var val = $(value).val();
+                    object[name] = val;
+                });
+                array.push(object);
             });
-            return o;
-        };
+            return array;
+        }
 
 
         // checks all "textarea" elements on page, if any are blank, sets "formValid" to false, otherwise to "true"
@@ -324,6 +317,28 @@
         function getFormattedDate(timestamp) {
             return moment.unix(timestamp).tz('America/New_York').format("MM/DD HH:mm z");
         };
+
+        function logRetrieve() {
+            $.getJSON('./log.json',function(data) {
+                theLog = data;
+                console.log('getting the log...');
+                return theLog;
+            });
+        }
+
+        logRetrieve();
+
+        // TODO: we basically need to do logedit in PHP
+        // setTimeout(function(){
+        //     logEdit();
+        // },2000);
+
+        function logEdit() {
+            logReady = JSON.stringify(theLog);
+            logReady = logReady.slice(1,-1);
+            logReady = JSON.parse(logReady);
+            return logReady;
+        }
 
     });
 })(jQuery, window, document);
