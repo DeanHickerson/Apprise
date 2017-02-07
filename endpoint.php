@@ -11,7 +11,7 @@
             save_to_files($data);
 
             // log this entry
-            append_to_log($data);
+            append_to_the_log($data);
 
             // and respond to the original AJAX request
             respond($data);
@@ -28,6 +28,13 @@
         // do something with $data
         $fp = fopen('results.json', 'w');
         fwrite($fp, $data);
+        fclose($fp);
+    }
+
+    function append_to_the_log($data) {
+        $fp = fopen('log.json', 'a');
+        $cleaned = ','.$data;
+        fwrite($fp, $cleaned);
         fclose($fp);
     }
 
