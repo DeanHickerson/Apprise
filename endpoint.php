@@ -32,9 +32,11 @@
     }
 
     function append_to_the_log($data) {
-        $fp = fopen('log.json', 'a');
-        $cleaned = ','.$data;
-        fwrite($fp, $cleaned);
+        $curLog = file_get_contents('log.json');
+        $logPrep = substr($curLog, 0, -1);
+        $logReady = $logPrep.','.$data.']';
+        $fp = fopen('log.json', 'w');
+        fwrite($fp, $logReady);
         fclose($fp);
     }
 

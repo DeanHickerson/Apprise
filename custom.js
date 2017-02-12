@@ -11,8 +11,6 @@
         var DUPLICATE_CLASS = '.form-duplicate-this';
         var formValid = false;
 
-        var theLog;
-        var logReady;
 
         // init form validation
         var $form = $('form#msgForm');
@@ -80,6 +78,10 @@
 
         // Get current Alert Message
         setTimeout(function() {
+            pageUpdate();
+        }, 2000);
+
+        function getCurrentMsg() {
             $.getJSON('./results.json', function(data) {
                 var output = '';
                 $.each(data.info,function(index,value){
@@ -87,9 +89,9 @@
                     output += value.startTime + ' ';
                     output += value.message + '</p>';
                 });
-                $('#currentMessage').html(output);
+                $('#currentMessage').hide().html(output).fadeIn(300);
             });
-        }, 2000);
+        }
 
         // form submit function
         function submit() {
@@ -119,23 +121,20 @@
                 console.log("Readable EST Timestamp: " + getFormattedDate(timestamp));
 
                 $.ajax({
-                    // url: 'functions.php',
                     url: 'endpoint.php',
                     data: {
                         'data': postData
                     },
                     dataType: 'json',
                     type: 'POST',
-                    // beforeSend: function(xhr) {
-                    //     xhr.setRequestType('application/json');
-                    // }
                 }).done(function(data) {
                     console.log("success");
                     // do stuff with our variables
-                    // addTableRow(data.json);
-
+                    clearFields();
+                    pageUpdate();
+                    $('.two').append('<div class="good"><p>Your message has been sent!</p></div>');
                 }).fail(function(jqXHR) {
-                    console.log("fail");
+                    console.error("fail");
                     // console.log(jqXHR);
                 }).always(function(data) {
                     console.log("done");
@@ -144,6 +143,22 @@
 
             }
         };
+
+        function pageUpdate() {
+            setTimeout(function() {
+                getCurrentMsg();
+                logRetrieve();
+            }, 2000);
+        }
+
+        if($('.good')) {
+            setTimeout(function(){
+                $('.good').fadeOut(2000);
+            },3000);
+        }
+        $('.good').stop().click(function(){
+            $(this).fadeOut(200);
+        });
 
 
         $.fn.serializeObject = function() {
@@ -319,25 +334,36 @@
         };
 
         function logRetrieve() {
-            $.getJSON('./log.json',function(data) {
-                theLog = data;
-                console.log('getting the log...');
-                return theLog;
+            $.getJSON('./log.json', function(data) {
+                var logArr = [],
+                    table = '';
+                $.each(data, function(index, obj) {
+                    var id = obj.msgId;
+                    $.each(obj.info, function(index,subObj) {
+                        subObj.empId = id;
+                        logArr.push(subObj);
+                    });
+                });
+                $.each(logArr, function(index,value) {
+                    table += '<tr>';
+                    table += '<td>' + value.empId + '</td>';
+                    table += '<td>' + value.startDate + '</td>';
+                    table += '<td>' + value.startTime + '</td>';
+                    table += '<td>' + value.endDate + '</td>';
+                    table += '<td>' + value.endTime + '</td>';
+                    table += '<td>' + value.message + '</td>';
+                    table += '</tr>';
+                });
+                $('#return-table tbody').hide().html(table).fadeIn(300);
             });
         }
 
-        logRetrieve();
-
-        // TODO: we basically need to do logedit in PHP
-        // setTimeout(function(){
-        //     logEdit();
-        // },2000);
-
-        function logEdit() {
-            logReady = JSON.stringify(theLog);
-            logReady = logReady.slice(1,-1);
-            logReady = JSON.parse(logReady);
-            return logReady;
+        function clearFields() {
+            $('input').val('');
+            $('textarea').val('');
+            $(DUPLICATE_CLASS).each(function(index){
+                removeLastMessage();
+            });
         }
 
     });

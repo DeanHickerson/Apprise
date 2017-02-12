@@ -44,12 +44,12 @@
                         <div class="form-duplicate-this">
                             <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="startDate">Start Date: </label></span>
                             <input name="startDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date" required>
-                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="startTime">Start Time (eastern): </label></span>
+                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="startTime">Start Time <span class="small inline">(eastern)</span>: </label></span>
                             <input name="startTime" class="" type="text" autocomplete="on" placeholder="HHmm (e.g., 1630)" minlength="4" maxlength="4" required>
 
-                            <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="endDate">End Date: </label></span>
+                            <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="endDate">End Date <span class="small inline">(optional)</span>: </label></span>
                             <input name="endDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date">
-                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="endTime">End Time: </label></span>
+                            <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="endTime">End Time <span class="small inline">(optional)</span>: </label></span>
                             <input name="endTime" class="" type="number" autocomplete="on" placeholder="End Time" minlength="4" maxlength="4">
 
                             <span><i class="fa fa-comment-o" aria-hidden="true"></i><label for="message">Message: </label></span>
@@ -74,42 +74,26 @@
             <div class="flex-col half two">
                 <h3>Current Message:</h3>
                 <div id="currentMessage"></div>
+                <!-- <div class="good"><p>Your message has been sent!</p></div> -->
             </div>
         </div>
 
-        <table class="table table-hover" id="return-table" width="100%">
-            <colgroup>
-                <col style="width:10%;">
-                <col style="width:10%;">
-                <col style="width:10%;">
-                <col style="width:10%;">
-                <col style="width:10%;">
-                <col style="width:50%;">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>Employee ID</th>
-                    <th>Start Date</th>
-                    <th>Start Time</th>
-                    <th>End Date</th>
-                    <th>End Time</th>
-                    <th>Message</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <div class="table-window">
+            <table class="table table-hover" id="return-table" width="100%">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Start Date</th>
+                        <th>Start Time</th>
+                        <th>End Date</th>
+                        <th>End Time</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </section>
-
-    <script id="entry-template" type="text/x-handlebars-template">
-        <tr>
-            <td>{{empId}}</td>
-            <td>{{startDate}}</td>
-            <td>{{startTime}}</td>
-            <td>{{endDate}}</td>
-            <td>{{endTime}}</td>
-            <td>{{message}}</td>
-        </tr>
-    </script>
 
     <footer>
         <div class="flex-row footer">
