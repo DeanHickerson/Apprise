@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en-us">
+<body>
+    <div></div>
+
+<script src="js/jquery/jquery-3.1.1.min.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $.getJSON('results.json', function(data) {
+            var output = '<div>';
+            if(data.dateWarn) {
+                output += '<p style="color:red;">Warning</p>';
+            }
+            $.each(data.info, function(index,value){
+                output += '<p>';
+                output += value.startDate + ' - ';
+                output += value.startTime + ' - ';
+                output += value.message;
+                output += '</p>';
+            });
+            output += '</div>';
+            $('div').html(output);
+        });
+    });
+
+</script>
+</body>
+</html>

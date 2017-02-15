@@ -57,22 +57,19 @@
                         </div>
                     </div>
                 </form>
-                <div class="form-controls">
-                    <button id="submit" disabled="disabled">Submit</button>
-                    <div class="form-button disabled">
-                        <span class="add-more-messages" title="Add another alert">
-                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Add another message.
-                        </span>
+                <div class="form-controls flex-row">
+                    <button class="btn" id="submit" disabled="disabled">Submit</button>
+                    <div class="btn form-button disabled add-more-messages">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
                     </div>
-                    <div class="form-button disabled">
-                        <span class="remove-last-message" title="Remove the last alert">
-                            <i class="fa fa-minus-circle" aria-hidden="true"></i> Remove last message.
-                        </span>
+                    <div class="btn form-button disabled remove-last-message">
+                            <i class="fa fa-minus-circle" aria-hidden="true"></i>
                     </div>
                 </div>
             </div>
             <div class="flex-col half two">
                 <h3>Current Message:</h3>
+                <iframe src="results.html"></iframe>
                 <div id="currentMessage"></div>
                 <!-- <div class="good"><p>Your message has been sent!</p></div> -->
             </div>

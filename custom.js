@@ -29,7 +29,7 @@
         // bind button clicks
         $('.add-more-messages').on('click', addAdditionalMessage);
         $('.remove-last-message').on('click', removeLastMessage);
-        $('#submit').on('click', submit);
+        $('#submit').click(submit);
 
         // init textarea validation (on page load)
         $('textarea[name=message]').on('input', validateAllTextareas);
@@ -103,6 +103,8 @@
                 var formData = {};
                 if (regular) {
                     formData.dateWarn = "true";
+                } else {
+                    formData.dateWarn = "false";
                 }
                 formData.msgId = msgId;
                 formData.info = $('.form-duplicate-this').serializeObject();
@@ -132,7 +134,8 @@
                     // do stuff with our variables
                     clearFields();
                     pageUpdate();
-                    $('.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                    dismissPlusTimer($('.good'));
                 }).fail(function(jqXHR) {
                     console.error("fail");
                     // console.log(jqXHR);
@@ -151,15 +154,20 @@
             }, 2000);
         }
 
-        if($('.good')) {
-            setTimeout(function(){
-                $('.good').fadeOut(2000);
+        function dismissPlusTimer($notif) {
+            setTimeout(function() {
+                if($notif) {
+                    $notif.fadeOut(2000);
+                }
             },3000);
+            dismissNotif($notif);
         }
-        $('.good').stop().click(function(){
-            $(this).fadeOut(200);
-        });
 
+        function dismissNotif($notif) {
+            $notif.click(function(){
+                $(this).stop().fadeOut(200);
+            });
+        }
 
         $.fn.serializeObject = function() {
             var array = [];
@@ -208,22 +216,22 @@
 
         // enables the state of the Add button
         function enableAddButton() {
-            enableButton($('span.add-more-messages').parent());
+            enableButton($('.add-more-messages').parent());
         }
 
         // disables the state of the Add button
         function disableAddButton() {
-            disableButton($('span.add-more-messages').parent());
+            disableButton($('.add-more-messages').parent());
         }
 
         // enables the state of the Remove button
         function enableRemoveButton() {
-            enableButton($('span.remove-last-message').parent());
+            enableButton($('.remove-last-message').parent());
         }
 
         // disables the state of the Remove button
         function disableRemoveButton() {
-            disableButton($('span.remove-last-message').parent());
+            disableButton($('.remove-last-message').parent());
         }
 
         function enableButton($button) {

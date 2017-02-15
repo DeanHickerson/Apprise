@@ -150,7 +150,7 @@ select:focus {
     margin: 0.4rem;
 }
 
-#submit {
+.btn {
     border: 1px solid #4286f4;
     border-radius: 3px;
     margin: 0.5rem 0.5rem;
@@ -166,6 +166,21 @@ select:focus {
         color: white;
         cursor: pointer;
     }
+}
+
+
+
+
+.fa-plus-circle,
+.fa-minus-circle {
+    font-size: 1.4em;
+    text-align: center;
+    margin: auto;
+}
+
+.form-button {
+    display: flex;
+    justify-content: center;
 }
 
 .form-button .add-more-messages,

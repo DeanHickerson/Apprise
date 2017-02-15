@@ -5,8 +5,9 @@
         // ...and the data object we're expecting isn't empty...
         if (isset($_POST['data']) && !empty($_POST['data'])) {
             // then we'll store it locally in $data
-            $data = $_POST['data'];
-
+            $dataDirty = $_POST['data'];
+            $data = strip_tags($dataDirty);
+            
             // save it to a file, pretty self-explanatory
             save_to_files($data);
 
