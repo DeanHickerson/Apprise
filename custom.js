@@ -206,32 +206,42 @@
             if (invalidForm) {
                 // all existing textareas on page are valid, allow to add more...
                 disableAddButton();
+                disableSubmitButton();
                 formValid = false;
             } else {
                 // else, enable it!
                 enableAddButton();
+                enableSubmitButton();
                 formValid = true;
             }
         };
 
         // enables the state of the Add button
         function enableAddButton() {
-            enableButton($('.add-more-messages').parent());
+            enableButton($('.add-more-messages'));
         }
 
         // disables the state of the Add button
         function disableAddButton() {
-            disableButton($('.add-more-messages').parent());
+            disableButton($('.add-more-messages'));
         }
 
         // enables the state of the Remove button
         function enableRemoveButton() {
-            enableButton($('.remove-last-message').parent());
+            enableButton($('.remove-last-message'));
         }
 
         // disables the state of the Remove button
         function disableRemoveButton() {
-            disableButton($('.remove-last-message').parent());
+            disableButton($('.remove-last-message'));
+        }
+
+        function enableSubmitButton() {
+            enableButton($('#submit'));
+        }
+
+        function disableSubmitButton() {
+            disableButton($('#submit'));
         }
 
         function enableButton($button) {

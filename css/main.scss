@@ -154,8 +154,8 @@ select:focus {
     border: 1px solid #4286f4;
     border-radius: 3px;
     margin: 0.5rem 0.5rem;
-    height: 2rem;
-    width: 4rem;
+    min-height: 2rem;
+    min-width: 4rem;
     color: #1455bc;
     background-color: lighten(#4286f4, 20%);
     transition: all ease-in-out 0.3s;
@@ -168,7 +168,10 @@ select:focus {
     }
 }
 
-
+.form-controls.flex-row {
+    justify-content: flex-start;
+    margin-left: 0;
+}
 
 
 .fa-plus-circle,
@@ -188,10 +191,14 @@ select:focus {
     cursor: pointer;
 }
 
-.form-button.disabled .add-more-messages,
-.form-button.disabled .remove-last-message {
+.disabled {
     color: #ccc;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
+    &:hover {
+        color: #ccc;
+        background-color: #a2c4fa;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
+    }
 }
 
 .third {
