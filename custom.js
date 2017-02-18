@@ -35,12 +35,9 @@
         $('textarea[name=message]').on('input', validateAllTextareas);
 
 
-        // momentjs test code
+        // Time at pageload
         var rightNow = moment();
-        // console.log("CST: " + rightNow.format());
-        console.log("EST: " + rightNow.tz("America/New_York").format());
-        // Get the current time in DST format
-        var curTime = moment.tz(rightNow,'America/New_York').format("HH:mm");
+        var curTime = moment.tz(rightNow,'America/New_York').format("MM/DD/YY HH:mm");
         var date = moment.tz(rightNow,'America/New_York').format("M/D/YYYY");
         var tomorrow = moment().add(1, 'days');
         var tomorrowDate = moment.tz(tomorrow,'America/New_York').format("M/D/YYYY");
@@ -62,18 +59,30 @@
         // Lets check for special dates to warn for
         var regular;
         var early;
-        $.getJSON("dates.json",function(dates){
-            $.each(dates.regular,function(i,a){
-                if(tomorrowDate === a){
-                    return regular = true;
-                }
+        function getDates() {
+            $.getJSON("dates.json",function(dates){
+                $.each(dates.regular,function(i,a){
+                    if(tomorrowDate === a){
+                        return regular = true;
+                    }
+                });
+                $.each(dates.early,function(i,a){
+                    if(date === a){
+                        return early = true;
+                    }
+                });
             });
-            $.each(dates.early,function(i,a){
-                if(date === a){
-                    return early = true;
-                }
-            });
-        });
+        }
+
+        // When we are ready we will grab the time
+        function getTime() {
+            var rightnow = moment();
+            var curTime = moment.tz(rightNow,'America/New_York').format("MM/DD/YY HH:mm");
+            zoneCheck();
+            getDates();
+            var timestamp = curTime + ' ' + curDST;
+            return timestamp;
+        }
 
 
         // Get current Alert Message
@@ -85,8 +94,19 @@
             $.getJSON('./results.json', function(data) {
                 var output = '';
                 $.each(data.info,function(index,value){
+                    value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
+                    value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                    if(value.endDate || value.endTime !== '') {
+                        value.startTime = value.startTime.slice(0,-4);
+                    }
                     output += '<p>' + value.startDate + ' ';
                     output += value.startTime + ' ';
+                    if(value.endDate !== '') {
+                        output += 'to ' + value.endDate;
+                    }
+                    if(value.endTime !== '') {
+                        output += ' ' + value.endTime + ' ';
+                    }
                     output += value.message + '</p>';
                 });
                 $('#currentMessage').hide().html(output).fadeIn(300);
@@ -101,6 +121,8 @@
             if (isValid) {
                 var msgId = $('input[name=empId]').val();
                 var formData = {};
+                var timestamp = getTime();
+                formData.timestamp = timestamp;
                 if (regular) {
                     formData.dateWarn = "true";
                 } else {
@@ -117,11 +139,6 @@
                 console.log(formData);
                 var postData = JSON.stringify(formData);
                 console.log(postData);
-                // TODO: this can maybe go away
-                var timestamp = moment().unix();
-                console.log("Right now is: " + timestamp);
-                console.log("Readable EST Timestamp: " + getFormattedDate(timestamp));
-
                 $.ajax({
                     url: 'endpoint.php',
                     data: {
@@ -320,9 +337,6 @@
             isFormValid(e);
         });
 
-        // TODO: bind additional listener for COMPLETE form validation
-
-        // determine if we can submit the form (need EmpID, START datetime, and message(s))
         // REQUIRED: EmpID, Start Date, Start Time, and Message
         function isFormValid(e) {
             var $input = $(e.target),
@@ -341,15 +355,6 @@
             // todo: add other validation
         };
 
-        // converts form input date & time into unix timestamp
-        function getTimestamp(formattedDate) {
-            // TODO Do we need this?
-        };
-
-        // converts unix timestamp to human readable EST date & time
-        function getFormattedDate(timestamp) {
-            return moment.unix(timestamp).tz('America/New_York').format("MM/DD HH:mm z");
-        };
 
         function logRetrieve() {
             $.getJSON('./log.json', function(data) {
@@ -357,13 +362,18 @@
                     table = '';
                 $.each(data, function(index, obj) {
                     var id = obj.msgId;
+                    var timestamp = obj.timestamp;
                     $.each(obj.info, function(index,subObj) {
                         subObj.empId = id;
+                        subObj.timestamp = timestamp;
                         logArr.push(subObj);
                     });
                 });
                 $.each(logArr, function(index,value) {
+                    value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
+                    value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                     table += '<tr>';
+                    table += '<td>' + value.timestamp + '</td>';
                     table += '<td>' + value.empId + '</td>';
                     table += '<td>' + value.startDate + '</td>';
                     table += '<td>' + value.startTime + '</td>';

@@ -213,8 +213,47 @@ select:focus {
 
 #return-table {
     color: #404040;
-    th {background-color: lightblue}
-    tr:nth-child(odd) {background-color: #efefef}
+    th {
+        background-color: lightblue;
+        text-align: center;
+        padding: .5em;
+    }
+    tr:nth-child(odd) {
+        background-color: #efefef;
+    }
+    tr {
+        transition: all ease-in-out .3s;
+    }
+    tbody tr:hover {
+        background-color: #ebf8ff;
+    }
+    th:nth-child(1) {
+        width: 15%;
+    }
+    th:nth-child(2) {
+        width: 8%;
+    }
+    th:nth-child(3) {
+        width: 9%;
+    }
+    th:nth-child(4) {
+        width: 9%;
+    }
+    th:nth-child(5) {
+        width: 9%;
+    }
+    th:nth-child(6) {
+        width: 9%;
+    }
+    td {
+        text-align: center;
+        padding: .2em;
+        vertical-align: top;
+    }
+    td:nth-child(7) {
+        text-align: left;
+    }
+
 }
 
 .footer {

@@ -1,5 +1,12 @@
 <!doctype html>
 <html lang="en-us">
+<head>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
 <body>
     <div></div>
 
@@ -7,15 +14,31 @@
 <script>
 
     $(document).ready(function() {
+        // Do not cache data
+        $.ajaxSetup({
+            cache: false
+        });
         $.getJSON('results.json', function(data) {
             var output = '<div>';
-            if(data.dateWarn) {
+            if(data.dateWarn === 'true') {
                 output += '<p style="color:red;">Warning</p>';
             }
             $.each(data.info, function(index,value){
                 output += '<p>';
+                value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
+                value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                if(value.endDate || value.endTime !== '') {
+                    value.startTime = value.startTime.slice(0,-4);
+                }
                 output += value.startDate + ' - ';
-                output += value.startTime + ' - ';
+                output += value.startTime;
+                if(value.endDate !== '') {
+                    output += ' to ' + value.endDate + ' ';
+                }
+                if(value.endTime !== '') {
+                    output += value.endTime + ' ';
+                }
+                output += ' ';
                 output += value.message;
                 output += '</p>';
             });
