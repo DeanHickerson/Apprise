@@ -175,7 +175,8 @@ select:focus {
 
 
 .fa-plus-circle,
-.fa-minus-circle {
+.fa-minus-circle,
+.fa-check-circle {
     font-size: 1.4em;
     text-align: center;
     margin: auto;
@@ -184,12 +185,9 @@ select:focus {
 .form-button {
     display: flex;
     justify-content: center;
-}
-
-.form-button .add-more-messages,
-.form-button .remove-last-message {
     cursor: pointer;
 }
+
 
 .disabled {
     color: #ccc;

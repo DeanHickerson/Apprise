@@ -23,6 +23,72 @@
             }
         });
 
+        function allClear() {
+            $('input').each(function(index) {
+                if($(this).attr('name') != 'empId') {
+                    $(this).val('');
+                }
+            });
+            $('textarea').val('');
+            $(DUPLICATE_CLASS).each(function(index){
+                removeLastMessage();
+            });
+            $('input[name=startDate]').val('1/1/2000');
+            $('input[name=startTime]').val('1100');
+            $('textarea').val('All Systems are Clear');
+            var $form = $('#msgForm'),
+                isValid = $form.valid();
+            if (isValid) {
+                var msgId = $('input[name=empId]').val();
+                var formData = {};
+                var timestamp = getTime("MM/DD/YY HH:mm");
+                formData.timestamp = timestamp;
+                if (regular) {
+                    formData.dateWarn = "true";
+                } else {
+                    formData.dateWarn = "false";
+                }
+                formData.msgId = msgId;
+                formData.info = [];
+                var ok = {};
+                ok.startDate = getTime("MM/DD/YYYY").slice(0,-4);
+                ok.startTime = getTime("HHmm").slice(0,-4);
+                ok.endDate = '';
+                ok.endTime = '';
+                ok.message = "All Systems Clear";
+                formData.info.push(ok);
+                $.each(formData.info,function(index,value){
+                    value.startTime += ' ' + curDST;
+                });
+                console.log(formData);
+                var postData = JSON.stringify(formData);
+                console.log(postData);
+                $.ajax({
+                    url: 'endpoint.php',
+                    data: {
+                        'data': postData
+                    },
+                    dataType: 'json',
+                    type: 'POST',
+                }).done(function(data) {
+                    console.log("success");
+                    // do stuff with our variables
+                    clearFields();
+                    pageUpdate();
+                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                    dismissPlusTimer($('.good'));
+                }).fail(function(jqXHR) {
+                    console.error("fail");
+                    // console.log(jqXHR);
+                }).always(function(data) {
+                    console.log("done");
+                    // console.log(data);
+                });
+
+            }
+
+        }
+
         // init datetimepicker
         $('.dtpicker').datepicker();
 
@@ -30,6 +96,7 @@
         $('.add-more-messages').on('click', addAdditionalMessage);
         $('.remove-last-message').on('click', removeLastMessage);
         $('#submit').click(submit);
+        $('#allCear').click(allClear);
 
         // init textarea validation (on page load)
         $('textarea[name=message]').on('input', validateAllTextareas);
@@ -75,9 +142,9 @@
         }
 
         // When we are ready we will grab the time
-        function getTime() {
+        function getTime(format) {
             var rightnow = moment();
-            var curTime = moment.tz(rightNow,'America/New_York').format("MM/DD/YY HH:mm");
+            var curTime = moment.tz(rightNow,'America/New_York').format(format);
             zoneCheck();
             getDates();
             var timestamp = curTime + ' ' + curDST;
@@ -121,7 +188,7 @@
             if (isValid) {
                 var msgId = $('input[name=empId]').val();
                 var formData = {};
-                var timestamp = getTime();
+                var timestamp = getTime("MM/DD/YY HH:mm");
                 formData.timestamp = timestamp;
                 if (regular) {
                     formData.dateWarn = "true";
@@ -358,6 +425,7 @@
 
         function logRetrieve() {
             $.getJSON('./log.json', function(data) {
+                data = data.reverse();
                 var logArr = [],
                     table = '';
                 $.each(data, function(index, obj) {
