@@ -41,7 +41,7 @@
             if (isValid) {
                 var msgId = $('input[name=empId]').val();
                 var formData = {};
-                var timestamp = getTime("MM/DD/YY HH:mm");
+                var timestamp = getTime("MM/DD/YY HH:mm",true);
                 formData.timestamp = timestamp;
                 if (regular) {
                     formData.dateWarn = "true";
@@ -51,8 +51,8 @@
                 formData.msgId = msgId;
                 formData.info = [];
                 var ok = {};
-                ok.startDate = getTime("MM/DD/YYYY").slice(0,-4);
-                ok.startTime = getTime("HHmm").slice(0,-4);
+                ok.startDate = getTime("MM/DD/YYYY");
+                ok.startTime = getTime("HHmm");
                 ok.endDate = '';
                 ok.endTime = '';
                 ok.message = "All Systems Clear";
@@ -142,12 +142,15 @@
         }
 
         // When we are ready we will grab the time
-        function getTime(format) {
+        function getTime(format,dst) {
             var rightnow = moment();
             var curTime = moment.tz(rightNow,'America/New_York').format(format);
             zoneCheck();
             getDates();
-            var timestamp = curTime + ' ' + curDST;
+            var timestamp = curTime;
+            if(dst) {
+                timestamp += ' ' + curDST;
+            }
             return timestamp;
         }
 
@@ -162,8 +165,8 @@
                 var output = '';
                 $.each(data.info,function(index,value){
                     value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                    value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                     if(value.endDate || value.endTime !== '') {
+                        value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                         value.startTime = value.startTime.slice(0,-4);
                     }
                     output += '<p>' + value.startDate + ' ';
@@ -188,7 +191,7 @@
             if (isValid) {
                 var msgId = $('input[name=empId]').val();
                 var formData = {};
-                var timestamp = getTime("MM/DD/YY HH:mm");
+                var timestamp = getTime("MM/DD/YY HH:mm",true);
                 formData.timestamp = timestamp;
                 if (regular) {
                     formData.dateWarn = "true";
@@ -439,7 +442,9 @@
                 });
                 $.each(logArr, function(index,value) {
                     value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                    value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                    if(value.endDate || value.endTime != '') {
+                        value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                    }
                     table += '<tr>';
                     table += '<td>' + value.timestamp + '</td>';
                     table += '<td>' + value.empId + '</td>';

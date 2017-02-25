@@ -26,11 +26,11 @@
             $.each(data.info, function(index,value){
                 output += '<p>';
                 value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                 if(value.endDate || value.endTime !== '') {
+                    value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                     value.startTime = value.startTime.slice(0,-4);
                 }
-                output += value.startDate + ' - ';
+                output += value.startDate + ' ';
                 output += value.startTime;
                 if(value.endDate !== '') {
                     output += ' to ' + value.endDate + ' ';
