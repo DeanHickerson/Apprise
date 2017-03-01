@@ -151,8 +151,6 @@ select:focus {
 .fa-id-badge,
 .fa-calendar,
 .fa-comment-o {
-    display: flex;
-    align-self: center;
     font-size: 1.4rem;
     margin: 0.4rem;
 }
@@ -186,6 +184,8 @@ select:focus {
 .fa-plus-circle,
 .fa-minus-circle,
 .fa-check-circle {
+    display: flex;
+    align-self: center;
     font-size: 1.5em;
     text-align: center;
     margin: auto;

@@ -23,6 +23,102 @@
             }
         });
 
+
+        // init datetimepicker
+        $('.dtpicker').datepicker();
+
+        // bind button clicks
+        $('.add-more-messages').on('click', addAdditionalMessage);
+        $('.remove-last-message').on('click', removeLastMessage);
+        $('#submit').click(submit);
+        $('#allCear').click(allClear);
+
+        // init textarea validation (on page load)
+        $('textarea[name=message]').on('input', validateAllTextareas);
+
+
+        // Time at pageload
+        var rightNow = moment();
+        var curTime = moment.tz(rightNow,'America/New_York').format("MM/DD/YY HH:mm");
+        var date = moment.tz(rightNow,'America/New_York').format("M/D/YYYY");
+        var tomorrow = moment().add(1, 'days');
+        var tomorrowDate = moment.tz(tomorrow,'America/New_York').format("M/D/YYYY");
+
+        // Check for DST and provide a variable to add to text
+        var curDST;
+        function zoneCheck(){
+            if(curTime.isDST){
+                curDST = 'EST';
+                console.log('We are currently on EST');
+            } else {
+                curDST = 'EDT';
+                console.log('We are currently on EDT');
+            }
+            return curDST;
+        }
+        // Check for DST and create DST variable
+        zoneCheck();
+        // Lets check for special dates to warn for
+        var regular = false;
+        var early = false;
+        function getDates() {
+            $.getJSON("dates.json",function(dates){
+                $.each(dates.regular,function(i,a){
+                    if(tomorrowDate === a){
+                        return regular = true;
+                    }
+                });
+                $.each(dates.early,function(i,a){
+                    if(date === a){
+                        return early = true;
+                    }
+                });
+            });
+        }
+        getDates();
+
+        // When we are ready we will grab the time
+        function getTime(format,dst) {
+            var rightnow = moment();
+            var curTime = moment.tz(rightNow,'America/New_York').format(format);
+            zoneCheck();
+            getDates();
+            var timestamp = curTime;
+            if(dst) {
+                timestamp += ' ' + curDST;
+            }
+            return timestamp;
+        }
+
+
+        // Get current Alert Message
+        setTimeout(function() {
+            pageUpdate();
+        }, 2000);
+
+        function getCurrentMsg() {
+            $.getJSON('./results.json', function(data) {
+                var output = '';
+                $.each(data.info,function(index,value){
+                    value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
+                    if(value.endDate || value.endTime !== '') {
+                        value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                        value.startTime = value.startTime.slice(0,-4);
+                    }
+                    output += '<p>' + value.startDate + ' ';
+                    output += value.startTime + ' ';
+                    if(value.endDate !== '') {
+                        output += 'to ' + value.endDate;
+                    }
+                    if(value.endTime !== '') {
+                        output += ' ' + value.endTime + ' ';
+                    }
+                    output += value.message + '</p>';
+                });
+                $('#currentMessage').hide().html(output).fadeIn(300);
+            });
+        }
+
         function allClear() {
             $('input').each(function(index) {
                 if($(this).attr('name') != 'empId') {
@@ -87,100 +183,6 @@
 
             }
 
-        }
-
-        // init datetimepicker
-        $('.dtpicker').datepicker();
-
-        // bind button clicks
-        $('.add-more-messages').on('click', addAdditionalMessage);
-        $('.remove-last-message').on('click', removeLastMessage);
-        $('#submit').click(submit);
-        $('#allCear').click(allClear);
-
-        // init textarea validation (on page load)
-        $('textarea[name=message]').on('input', validateAllTextareas);
-
-
-        // Time at pageload
-        var rightNow = moment();
-        var curTime = moment.tz(rightNow,'America/New_York').format("MM/DD/YY HH:mm");
-        var date = moment.tz(rightNow,'America/New_York').format("M/D/YYYY");
-        var tomorrow = moment().add(1, 'days');
-        var tomorrowDate = moment.tz(tomorrow,'America/New_York').format("M/D/YYYY");
-
-        // Check for DST and provide a variable to add to text
-        var curDST;
-        function zoneCheck(){
-            if(curTime.isDST){
-                curDST = 'EST';
-                console.log('We are currently on EST');
-            } else {
-                curDST = 'EDT';
-                console.log('We are currently on EDT');
-            }
-            return curDST;
-        }
-        // Check for DST and create DST variable
-        zoneCheck();
-        // Lets check for special dates to warn for
-        var regular;
-        var early;
-        function getDates() {
-            $.getJSON("dates.json",function(dates){
-                $.each(dates.regular,function(i,a){
-                    if(tomorrowDate === a){
-                        return regular = true;
-                    }
-                });
-                $.each(dates.early,function(i,a){
-                    if(date === a){
-                        return early = true;
-                    }
-                });
-            });
-        }
-
-        // When we are ready we will grab the time
-        function getTime(format,dst) {
-            var rightnow = moment();
-            var curTime = moment.tz(rightNow,'America/New_York').format(format);
-            zoneCheck();
-            getDates();
-            var timestamp = curTime;
-            if(dst) {
-                timestamp += ' ' + curDST;
-            }
-            return timestamp;
-        }
-
-
-        // Get current Alert Message
-        setTimeout(function() {
-            pageUpdate();
-        }, 2000);
-
-        function getCurrentMsg() {
-            $.getJSON('./results.json', function(data) {
-                var output = '';
-                $.each(data.info,function(index,value){
-                    value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                    if(value.endDate || value.endTime !== '') {
-                        value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
-                        value.startTime = value.startTime.slice(0,-4);
-                    }
-                    output += '<p>' + value.startDate + ' ';
-                    output += value.startTime + ' ';
-                    if(value.endDate !== '') {
-                        output += 'to ' + value.endDate;
-                    }
-                    if(value.endTime !== '') {
-                        output += ' ' + value.endTime + ' ';
-                    }
-                    output += value.message + '</p>';
-                });
-                $('#currentMessage').hide().html(output).fadeIn(300);
-            });
         }
 
         // form submit function
