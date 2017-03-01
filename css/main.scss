@@ -151,6 +151,8 @@ select:focus {
 .fa-id-badge,
 .fa-calendar,
 .fa-comment-o {
+    display: flex;
+    align-self: center;
     font-size: 1.4rem;
     margin: 0.4rem;
 }
@@ -191,6 +193,7 @@ select:focus {
 
 .form-button {
     display: flex;
+    flex: 0 1 auto;
     justify-content: center;
     cursor: pointer;
     &:active {
