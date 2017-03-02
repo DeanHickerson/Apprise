@@ -43,14 +43,14 @@
                     <div class="form-duplicated-elements">
                         <div class="form-duplicate-this">
                             <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="startDate">Start Date: </label></span>
-                            <input name="startDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date" required>
+                            <input name="startDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date" maxlength="10" required>
                             <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="startTime">Start Time <span class="small inline">(eastern)</span>: </label></span>
                             <input name="startTime" class="" type="text" autocomplete="on" placeholder="HHmm (e.g., 1630)" minlength="4" maxlength="4" required>
 
                             <span><i class="fa fa-calendar" aria-hidden="true"></i><label for="endDate">End Date <span class="small inline">(optional)</span>: </label></span>
-                            <input name="endDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date">
+                            <input name="endDate" class="dtpicker" type="text" autocomplete="off" placeholder="Pick Date" maxlength="10">
                             <span><i class="fa fa-clock-o" aria-hidden="true"></i><label for="endTime">End Time <span class="small inline">(optional)</span>: </label></span>
-                            <input name="endTime" class="" type="number" autocomplete="on" placeholder="End Time" minlength="4" maxlength="4">
+                            <input name="endTime" class="" type="text" autocomplete="on" placeholder="End Time" minlength="4" maxlength="4">
 
                             <span><i class="fa fa-comment-o" aria-hidden="true"></i><label for="message">Message: </label></span>
                             <textarea name="message" autocomplete="off" placeholder="ex: All Enterprise Systems and applications are operational." required></textarea>
@@ -115,7 +115,7 @@
 
     <!-- JS -->
     <script src="vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="vendor/jqueryvalidation/jquery.validate.js"></script>
+    <!-- <script src="vendor/jqueryvalidation/jquery.validate.js"></script> -->
     <script src="vendor/jqueryui/jquery-ui-datepicker.min.js"></script>
     <script src="vendor/momentjs/moment-with-locales.min.js"></script>
     <script src="vendor/momentjs/moment-timezone-with-data.min.js"></script>

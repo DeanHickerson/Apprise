@@ -28,7 +28,7 @@ section {
 
 @media screen and (min-width: 1300px) {
     section {
-        max-width: 1040px;
+        max-width: 1140px;
     }
 }
 
@@ -76,6 +76,10 @@ table th, table td {
         margin: 0;
         color: #0f6d00;
     }
+}
+
+.bad {
+    border: 1px solid red;
 }
 
 form span {
@@ -188,7 +192,6 @@ select:focus {
     align-self: center;
     font-size: 1.5em;
     text-align: center;
-    margin: auto;
 }
 
 .form-button {

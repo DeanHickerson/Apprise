@@ -14,14 +14,6 @@
 
         // init form validation
         var $form = $('form#msgForm');
-        $form.validate({
-            rules: {
-                empId: {
-                    required: true,
-                    digits: true
-                }
-            }
-        });
 
 
         // init datetimepicker
@@ -48,41 +40,28 @@
         var curDST;
         function zoneCheck(){
             if(curTime.isDST){
-                curDST = 'EST';
-                console.log('We are currently on EST');
-            } else {
                 curDST = 'EDT';
-                console.log('We are currently on EDT');
+            } else {
+                curDST = 'EST';
             }
             return curDST;
         }
         // Check for DST and create DST variable
         zoneCheck();
         // Lets check for special dates to warn for
-        var regular = false;
-        var early = false;
-        function getDates() {
-            $.getJSON("dates.json",function(dates){
-                $.each(dates.regular,function(i,a){
-                    if(tomorrowDate === a){
-                        return regular = true;
-                    }
-                });
-                $.each(dates.early,function(i,a){
-                    if(date === a){
-                        return early = true;
-                    }
-                });
+        var dates = (function() {
+            var dates = {};
+            $.getJSON('dates.json', function(data) {
+                dates.regular = data.regular;
             });
-        }
-        getDates();
+            return dates;
+        })();
 
         // When we are ready we will grab the time
         function getTime(format,dst) {
             var rightnow = moment();
             var curTime = moment.tz(rightNow,'America/New_York').format(format);
             zoneCheck();
-            getDates();
             var timestamp = curTime;
             if(dst) {
                 timestamp += ' ' + curDST;
@@ -132,108 +111,102 @@
             $('input[name=startDate]').val('1/1/2000');
             $('input[name=startTime]').val('1100');
             $('textarea').val('All Systems are Clear');
-            var $form = $('#msgForm'),
-                isValid = $form.valid();
-            if (isValid) {
-                var msgId = $('input[name=empId]').val();
-                var formData = {};
-                var timestamp = getTime("MM/DD/YY HH:mm",true);
-                formData.timestamp = timestamp;
-                if (regular) {
-                    formData.dateWarn = "true";
+            var $form = $('#msgForm');
+            var msgId = $('input[name=empId]').val();
+            var formData = {};
+            var timestamp = getTime("MM/DD/YY HH:mm",true);
+            $.each(dates.regular,function(i,a){
+                if(tomorrowDate === a){
+                    return formData.dateWarn = "true";
                 } else {
-                    formData.dateWarn = "false";
+                    return formData.dateWarn = "false";
                 }
-                formData.msgId = msgId;
-                formData.info = [];
-                var ok = {};
-                ok.startDate = getTime("MM/DD/YYYY");
-                ok.startTime = getTime("HHmm");
-                ok.endDate = '';
-                ok.endTime = '';
-                ok.message = "All Systems Clear";
-                formData.info.push(ok);
-                $.each(formData.info,function(index,value){
-                    value.startTime += ' ' + curDST;
-                });
-                console.log(formData);
-                var postData = JSON.stringify(formData);
-                console.log(postData);
-                $.ajax({
-                    url: 'endpoint.php',
-                    data: {
-                        'data': postData
-                    },
-                    dataType: 'json',
-                    type: 'POST',
-                }).done(function(data) {
-                    console.log("success");
-                    // do stuff with our variables
-                    clearFields();
-                    pageUpdate();
-                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
-                    dismissPlusTimer($('.good'));
-                }).fail(function(jqXHR) {
-                    console.error("fail");
-                    // console.log(jqXHR);
-                }).always(function(data) {
-                    console.log("done");
-                    // console.log(data);
-                });
-
-            }
-
+            });
+            formData.timestamp = timestamp;
+            formData.msgId = msgId;
+            formData.info = [];
+            var ok = {};
+            ok.startDate = getTime("MM/DD/YYYY");
+            ok.startTime = getTime("HHmm");
+            ok.endDate = '';
+            ok.endTime = '';
+            ok.message = "All Systems Clear";
+            formData.info.push(ok);
+            $.each(formData.info,function(index,value){
+                value.startTime += ' ' + curDST;
+            });
+            console.log(formData);
+            var postData = JSON.stringify(formData);
+            console.log(postData);
+            $.ajax({
+                url: 'endpoint.php',
+                data: {
+                    'data': postData
+                },
+                dataType: 'json',
+                type: 'POST',
+            }).done(function(data) {
+                console.log("success");
+                // do stuff with our variables
+                clearFields();
+                pageUpdate();
+                $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                dismissPlusTimer($('.good'));
+            }).fail(function(jqXHR) {
+                console.error("fail");
+                // console.log(jqXHR);
+            }).always(function(data) {
+                console.log("done");
+                // console.log(data);
+            });
         }
 
         // form submit function
         function submit() {
-            var $form = $('#msgForm'),
-                isValid = $form.valid();
-            console.log("Form is valid? " + isValid);
-            if (isValid) {
-                var msgId = $('input[name=empId]').val();
-                var formData = {};
-                var timestamp = getTime("MM/DD/YY HH:mm",true);
-                formData.timestamp = timestamp;
-                if (regular) {
-                    formData.dateWarn = "true";
+            var $form = $('#msgForm');
+            var msgId = $('input[name=empId]').val();
+            var formData = {};
+            var timestamp = getTime("MM/DD/YY HH:mm",true);
+            $.each(dates.regular,function(i,a){
+                if(tomorrowDate === a){
+                    return formData.dateWarn = "true";
                 } else {
-                    formData.dateWarn = "false";
+                    return formData.dateWarn = "false";
                 }
-                formData.msgId = msgId;
-                formData.info = $('.form-duplicate-this').serializeObject();
-                $.each(formData.info,function(index,value){
-                    value.startTime += ' ' + curDST;
-                    if (value.endTime !== '') {
-                        value.endTime += ' ' + curDST;
-                    }
-                });
-                console.log(formData);
-                var postData = JSON.stringify(formData);
-                console.log(postData);
-                $.ajax({
-                    url: 'endpoint.php',
-                    data: {
-                        'data': postData
-                    },
-                    dataType: 'json',
-                    type: 'POST',
-                }).done(function(data) {
-                    console.log("success");
-                    // do stuff with our variables
-                    clearFields();
-                    pageUpdate();
-                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
-                    dismissPlusTimer($('.good'));
-                }).fail(function(jqXHR) {
-                    console.error("fail");
-                    // console.log(jqXHR);
-                }).always(function(data) {
-                    console.log("done");
-                    // console.log(data);
-                });
-
-            }
+            });
+            formData.timestamp = timestamp;
+            formData.msgId = msgId;
+            formData.info = $('.form-duplicate-this').serializeObject();
+            $.each(formData.info,function(index,value){
+                value.startTime += ' ' + curDST;
+                if (value.endTime !== '') {
+                    value.endTime += ' ' + curDST;
+                }
+            });
+            console.log(formData);
+            var postData = JSON.stringify(formData);
+            console.log(postData);
+            $.ajax({
+                url: 'endpoint.php',
+                data: {
+                    'data': postData
+                },
+                dataType: 'json',
+                type: 'POST',
+            }).done(function(data) {
+                console.log("success");
+                // do stuff with our variables
+                clearFields();
+                pageUpdate();
+                $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                dismissPlusTimer($('.good'));
+            }).fail(function(jqXHR) {
+                console.error("fail");
+                // console.log(jqXHR);
+            }).always(function(data) {
+                console.log("done");
+                // console.log(data);
+            });
         };
 
         function pageUpdate() {
@@ -350,7 +323,7 @@
                     messageLength = 0; // instantiate at 0
 
                 // clone the first element
-                $dup.first().off().clone().appendTo($dup.parent());
+                $dup.first().off().clone().appendTo($dup.parent()).find('.dtpicker').attr('id','').removeClass('hasDatepicker').datepicker();;
 
                 // get how many "textarea"s are on the page at this moment
                 messageLength = $('textarea').length;
@@ -370,6 +343,8 @@
                         $message.on('input', validateAllTextareas);
                     }
                 });
+                // bind these new fields with our text prevention
+                bindEvents();
 
                 // disable add button
                 disableAddButton();
@@ -426,6 +401,46 @@
 
             // todo: add other validation
         };
+
+        // Lets prevent some input types in our inputs
+        bindEvents();
+        function bindEvents() {
+            $('input').on('keydown', preventAlphaChars);
+            $('input[name=startDate]').on('keydown', preventAlphaChars);
+            $('input[name=endDate]').on('keydown', preventAlphaChars);
+            $('input[name=startTime]').on('keyup', validateTime);
+            $('input[name=endTime]').on('keyup', validateTime);
+        }
+
+        function preventAlphaChars(event) {
+            if(event.which !== 9 || event.which !== 27 || event.which !== 37 || event.which !== 39 || event.which !== 46) {
+                if(event.which >= 65 && event.which <= 90) {
+                    event.preventDefault();
+                }
+            }
+        }
+
+        // lets add some more validation
+        function validateTime() {
+            var value = $(this).val();
+            if(value.length === 4) {
+                var hours = value.slice(0,-2);
+                var mins = value.slice(2);
+                hours = parseInt(hours,10);
+                mins = parseInt(mins,10);
+                if((hours >= 25) || (mins >= 60)) {
+                    if (!$(this).hasClass('bad')) {
+                        $(this).addClass('bad');
+                        disableSubmitButton();
+                    }
+                } else {
+                    if ($(this).hasClass('bad')) {
+                        $(this).removeClass('bad');
+                        enableSubmitButton();
+                    }
+                }
+            }
+        }
 
 
         function logRetrieve() {
