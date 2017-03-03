@@ -10,6 +10,8 @@
         // declare constants
         var DUPLICATE_CLASS = '.form-duplicate-this';
         var formValid = false;
+        var validTime = false;
+        var valid = false;
 
 
         // init form validation
@@ -183,30 +185,33 @@
                     value.endTime += ' ' + curDST;
                 }
             });
-            console.log(formData);
-            var postData = JSON.stringify(formData);
-            console.log(postData);
-            $.ajax({
-                url: 'endpoint.php',
-                data: {
-                    'data': postData
-                },
-                dataType: 'json',
-                type: 'POST',
-            }).done(function(data) {
-                console.log("success");
-                // do stuff with our variables
-                clearFields();
-                pageUpdate();
-                $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
-                dismissPlusTimer($('.good'));
-            }).fail(function(jqXHR) {
-                console.error("fail");
-                // console.log(jqXHR);
-            }).always(function(data) {
-                console.log("done");
-                // console.log(data);
-            });
+            validate(formData);
+            if(valid) {
+                console.log(formData);
+                var postData = JSON.stringify(formData);
+                console.log(postData);
+                $.ajax({
+                    url: 'endpoint.php',
+                    data: {
+                        'data': postData
+                    },
+                    dataType: 'json',
+                    type: 'POST',
+                }).done(function(data) {
+                    console.log("success");
+                    // do stuff with our variables
+                    clearFields();
+                    pageUpdate();
+                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                    dismissPlusTimer($('.good'));
+                }).fail(function(jqXHR) {
+                    console.error("fail");
+                    // console.log(jqXHR);
+                }).always(function(data) {
+                    console.log("done");
+                    // console.log(data);
+                });
+            }
         };
 
         function pageUpdate() {
@@ -348,6 +353,7 @@
 
                 // disable add button
                 disableAddButton();
+                disableSubmitButton();
 
                 // reset form to invalid
                 formValid = false;
@@ -379,28 +385,6 @@
             }
         };
 
-        // on empid input check if we can add/remove messages
-        $('input[name=empId]').on('input', function(e) {
-            isFormValid(e);
-        });
-
-        // REQUIRED: EmpID, Start Date, Start Time, and Message
-        function isFormValid(e) {
-            var $input = $(e.target),
-                value = $input.val(),
-                $submit = $('#submit'),
-                $formButtons = $('.form-button');
-
-            if (value.length == 5) {
-                formValid = true;
-                $submit.prop('disabled', false);
-            } else {
-                formValid = false;
-                $submit.prop('disabled', true);
-            }
-
-            // todo: add other validation
-        };
 
         // Lets prevent some input types in our inputs
         bindEvents();
@@ -431,15 +415,37 @@
                 if((hours >= 25) || (mins >= 60)) {
                     if (!$(this).hasClass('bad')) {
                         $(this).addClass('bad');
-                        disableSubmitButton();
                     }
+                    validTime = false;
                 } else {
                     if ($(this).hasClass('bad')) {
                         $(this).removeClass('bad');
-                        enableSubmitButton();
                     }
+                    validTime = true;
                 }
             }
+            return validTime;
+        }
+
+        function validate(formData) {
+            var validId = false;
+            var validForm = false;
+            if(formData.msgId.length == 5) {
+                validId = true;
+            }
+            $.each(formData.info, function(index,value) {
+                if(value.startDate !== '' || value.startTime !== '' || value.message !== '') {
+                    validForm = true;
+                } else {
+                    return validForm = false;
+                }
+            });
+            if(validId && validForm && validTime) {
+                valid = true;
+            } else {
+                valid = false;
+            }
+            return valid;
         }
 
 
@@ -482,6 +488,9 @@
             $(DUPLICATE_CLASS).each(function(index){
                 removeLastMessage();
             });
+            valid = false;
+            validTime = false;
+            disableSubmitButton();
         }
 
     });
