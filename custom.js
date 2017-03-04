@@ -25,7 +25,13 @@
         $('.add-more-messages').on('click', addAdditionalMessage);
         $('.remove-last-message').on('click', removeLastMessage);
         $('#submit').click(submit);
-        $('#allCear').click(allClear);
+        $('#allClear').click(allClear);
+        $('#appendMsg').click(appendMessage);
+        $('input[name=empId]').on('focus', function() {
+            if ($(this).hasClass('bad')) {
+                $(this).removeClass('bad');
+            }
+        })
 
         // init textarea validation (on page load)
         $('textarea[name=message]').on('input', validateAllTextareas);
@@ -101,66 +107,72 @@
         }
 
         function allClear() {
-            $('input').each(function(index) {
-                if($(this).attr('name') != 'empId') {
-                    $(this).val('');
+            if($('input[name=empId]').val().length == 5) {
+                $('input').each(function(index) {
+                    if($(this).attr('name') !== 'empId') {
+                        $(this).val('');
+                    }
+                });
+                $('textarea').val('');
+                $(DUPLICATE_CLASS).each(function(index){
+                    removeLastMessage();
+                });
+                $('input[name=startDate]').val('1/1/2000');
+                $('input[name=startTime]').val('1100');
+                $('textarea').val('All Systems are Clear');
+                var $form = $('#msgForm');
+                var msgId = $('input[name=empId]').val();
+                var formData = {};
+                var timestamp = getTime("MM/DD/YY HH:mm",true);
+                $.each(dates.regular,function(i,a){
+                    if(tomorrowDate === a){
+                        return formData.dateWarn = "true";
+                    } else {
+                        return formData.dateWarn = "false";
+                    }
+                });
+                formData.timestamp = timestamp;
+                formData.msgId = msgId;
+                formData.info = [];
+                var ok = {};
+                ok.startDate = getTime("MM/DD/YYYY");
+                ok.startTime = getTime("HHmm");
+                ok.endDate = '';
+                ok.endTime = '';
+                ok.message = "All Systems Clear";
+                formData.info.push(ok);
+                $.each(formData.info,function(index,value){
+                    value.startTime += ' ' + curDST;
+                });
+                console.log(formData);
+                var postData = JSON.stringify(formData);
+                console.log(postData);
+                $.ajax({
+                    url: 'endpoint.php',
+                    data: {
+                        'data': postData
+                    },
+                    dataType: 'json',
+                    type: 'POST',
+                }).done(function(data) {
+                    console.log("success");
+                    // do stuff with our variables
+                    clearFields();
+                    pageUpdate();
+                    $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                    dismissPlusTimer($('.good'));
+                }).fail(function(jqXHR) {
+                    console.error("fail");
+                    // console.log(jqXHR);
+                }).always(function(data) {
+                    console.log("done");
+                    // console.log(data);
+                });
+            } else {
+                if (!$('input[name=empId]').hasClass('bad')) {
+                    $('input[name=empId]').addClass('bad');
                 }
-            });
-            $('textarea').val('');
-            $(DUPLICATE_CLASS).each(function(index){
-                removeLastMessage();
-            });
-            $('input[name=startDate]').val('1/1/2000');
-            $('input[name=startTime]').val('1100');
-            $('textarea').val('All Systems are Clear');
-            var $form = $('#msgForm');
-            var msgId = $('input[name=empId]').val();
-            var formData = {};
-            var timestamp = getTime("MM/DD/YY HH:mm",true);
-            $.each(dates.regular,function(i,a){
-                if(tomorrowDate === a){
-                    return formData.dateWarn = "true";
-                } else {
-                    return formData.dateWarn = "false";
-                }
-            });
-            formData.timestamp = timestamp;
-            formData.msgId = msgId;
-            formData.info = [];
-            var ok = {};
-            ok.startDate = getTime("MM/DD/YYYY");
-            ok.startTime = getTime("HHmm");
-            ok.endDate = '';
-            ok.endTime = '';
-            ok.message = "All Systems Clear";
-            formData.info.push(ok);
-            $.each(formData.info,function(index,value){
-                value.startTime += ' ' + curDST;
-            });
-            console.log(formData);
-            var postData = JSON.stringify(formData);
-            console.log(postData);
-            $.ajax({
-                url: 'endpoint.php',
-                data: {
-                    'data': postData
-                },
-                dataType: 'json',
-                type: 'POST',
-            }).done(function(data) {
-                console.log("success");
-                // do stuff with our variables
-                clearFields();
-                pageUpdate();
-                $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
-                dismissPlusTimer($('.good'));
-            }).fail(function(jqXHR) {
-                console.error("fail");
-                // console.log(jqXHR);
-            }).always(function(data) {
-                console.log("done");
-                // console.log(data);
-            });
+            }
         }
 
         // form submit function
@@ -213,6 +225,64 @@
                 });
             }
         };
+
+
+        function appendMessage() {
+            var msgId = $('input[name=empId]').val();
+            var formData = {};
+            var timestamp = getTime("MM/DD/YY HH:mm",true);
+            $.each(dates.regular,function(i,a){
+                if(tomorrowDate === a){
+                    return formData.dateWarn = "true";
+                } else {
+                    return formData.dateWarn = "false";
+                }
+            });
+            formData.timestamp = timestamp;
+            formData.msgId = msgId;
+            formData.info = $('.form-duplicate-this').serializeObject();
+            $.each(formData.info,function(index,value){
+                value.startTime += ' ' + curDST;
+                if (value.endTime !== '') {
+                    value.endTime += ' ' + curDST;
+                }
+            });
+            validate(formData);
+            if(valid) {
+                $.getJSON('results.json', function(data) {
+                    var existing = data.info;
+                    var appending = formData.info;
+                    var newInfo = existing.concat(appending);
+                    formData.info = newInfo;
+                });
+                setTimeout(function() {
+                    console.log(formData);
+                    var postData = JSON.stringify(formData);
+                    console.log(postData);
+                    $.ajax({
+                        url: 'endpoint.php',
+                        data: {
+                            'data': postData
+                        },
+                        dataType: 'json',
+                        type: 'POST',
+                    }).done(function(data) {
+                        console.log("success");
+                        // do stuff with our variables
+                        clearFields();
+                        pageUpdate();
+                        $('.half.two').append('<div class="good"><p>Your message has been sent!</p></div>');
+                        dismissPlusTimer($('.good'));
+                    }).fail(function(jqXHR) {
+                        console.error("fail");
+                        // console.log(jqXHR);
+                    }).always(function(data) {
+                        console.log("done");
+                        // console.log(data);
+                    });
+                },1000);
+            }
+        }
 
         function pageUpdate() {
             setTimeout(function() {
@@ -303,6 +373,7 @@
             disableButton($('.remove-last-message'));
         }
 
+        // i/o for submit button
         function enableSubmitButton() {
             enableButton($('#submit'));
         }
@@ -311,6 +382,24 @@
             disableButton($('#submit'));
         }
 
+        // i/o for append message
+        function enableAppendButton() {
+            enableButton($('#appendMsg'));
+        }
+
+        function disableAppendButton() {
+            disableButton($('#appendMsg'));
+        }
+
+        function enableAllClearButton() {
+            enableButton($('#allClear'));
+        }
+
+        function disableAllClearButton() {
+            disableButton($('#allClear'));
+        }
+
+        // core button i/o
         function enableButton($button) {
             $button.removeClass('disabled');
         }
@@ -354,6 +443,7 @@
                 // disable add button
                 disableAddButton();
                 disableSubmitButton();
+                disableAppendButton();
 
                 // reset form to invalid
                 formValid = false;
@@ -394,6 +484,11 @@
             $('input[name=endDate]').on('keydown', preventAlphaChars);
             $('input[name=startTime]').on('keyup', validateTime);
             $('input[name=endTime]').on('keyup', validateTime);
+            $('input[name=empId]').on('keyup', function() {
+                if($(this).val().length == 5) {
+                    enableAllClearButton();
+                }
+            })
         }
 
         function preventAlphaChars(event) {
@@ -434,7 +529,7 @@
                 validId = true;
             }
             $.each(formData.info, function(index,value) {
-                if(value.startDate !== '' || value.startTime !== '' || value.message !== '') {
+                if(value.startDate !== '' && value.startTime !== '' && value.message !== '') {
                     validForm = true;
                 } else {
                     return validForm = false;
@@ -491,6 +586,7 @@
             valid = false;
             validTime = false;
             disableSubmitButton();
+            disableAppendButton();
         }
 
     });
