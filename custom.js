@@ -31,7 +31,7 @@
             if ($(this).hasClass('bad')) {
                 $(this).removeClass('bad');
             }
-        })
+        });
 
         // init textarea validation (on page load)
         $('textarea[name=message]').on('input', validateAllTextareas);
@@ -479,23 +479,54 @@
         // Lets prevent some input types in our inputs
         bindEvents();
         function bindEvents() {
-            $('input').on('keydown', preventAlphaChars);
-            $('input[name=startDate]').on('keydown', preventAlphaChars);
-            $('input[name=endDate]').on('keydown', preventAlphaChars);
+            $('input[name=empId]').on('keydown', preventAlphaChars);
+            $('input[name=startDate]').on('keydown', function(e) {
+                if (e.which != 9) {
+                    e.preventDefault();
+                }
+
+            });
+            $('input[name=startDate]').click(addClearButton);
+            $('input[name=endDate]').on('keydown', function(e) {
+                if (e.which != 9) {
+                    e.preventDefault();
+                }
+            });
+            $('input[name=endDate]').click(addClearButton);
+            $('input[name=startTime]').on('keydown', preventAlphaChars);
             $('input[name=startTime]').on('keyup', validateTime);
+            $('input[name=endTime]').on('keydown', preventAlphaChars);
             $('input[name=endTime]').on('keyup', validateTime);
             $('input[name=empId]').on('keyup', function() {
                 if($(this).val().length == 5) {
                     enableAllClearButton();
+                } else {
+                    disableAllClearButton();
                 }
-            })
+            });
         }
 
+        function addClearButton() {
+            var clear = $(this).next();
+            $('.ui-datepicker td').click(function() {
+                clear.fadeIn(300);
+            });
+        }
+
+        $('.clear').click(function() {
+            $(this).prev().val('');
+            $(this).fadeOut(300);
+        });
+
         function preventAlphaChars(event) {
-            if(event.which !== 9 || event.which !== 27 || event.which !== 37 || event.which !== 39 || event.which !== 46) {
-                if(event.which >= 65 && event.which <= 90) {
-                    event.preventDefault();
-                }
+            if(event.which >= 65 && event.which <= 90) {
+                event.preventDefault();
+            }
+            if(event.which >= 106 && event.which <= 111) {
+                event.preventDefault();
+            }
+            if(event.which >= 186 && event.which <= 222) {
+                event.preventDefault();
             }
         }
 
