@@ -30,6 +30,7 @@
 
     <header>
         <h1>Apprise</h1>
+        <p>Stay apprised of the situation.</p>
     </header>
 
     <section>
@@ -74,10 +75,15 @@
                 </div>
             </div>
             <div class="flex-col half two">
-                <h3>Current Message:</h3>
+                <h3>Current Message<span id="tstamp" class="small"></span></h3>
                 <iframe src="results.html"></iframe>
                 <div id="currentMessage"></div>
                 <!-- <div class="good"><p>Your message has been sent!</p></div> -->
+                <div class="removeMsg">
+                    <p>Want to remove a message? Type the number of the message that you want to remove.</p>
+                    <input name="removeIt" type="number">
+                    <button id="removeIt" class="btn form-button disabled">Remove</button>
+                </div>
             </div>
         </div>
 

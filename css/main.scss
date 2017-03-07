@@ -17,6 +17,20 @@ header {
     width: 100%;
     min-height: 15vh;
     text-align: center;
+    background: #B2FEFA;
+    background: -webkit-linear-gradient(to left, #B2FEFA , #0ED2F7);
+    background: linear-gradient(to left, #B2FEFA , #0ED2F7);
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 200;
+        margin: 0;
+        padding: 1rem 0 0 0;
+    }
+    p {
+        font-size: 1.2rem;
+        font-style: italic;
+        color: lighten(black, 35);
+    }
 }
 
 section {
@@ -24,6 +38,13 @@ section {
     min-height: 60vh;
     margin: auto;
     padding: 0.5rem;
+    h3 {
+        font-size: 2rem;
+        font-weight: 200;
+    }
+    .two h3 {
+        text-align: center;
+    }
 }
 
 @media screen and (min-width: 1300px) {
@@ -102,7 +123,7 @@ form span.inline {
     font-style: italic;
 }
 
-form input {
+input {
     font-family: Roboto, sans-serif;
     font-weight: 300;
     font-size: 1.3rem;
@@ -115,6 +136,7 @@ form input {
     transition: all ease-in-out 0.2s;
     &:focus {
         box-shadow: 0 6px 6px 0 rgba(0,0,0,0.14), 0 3px 15px 0 rgba(0,0,0,0.12), 0 9px 3px -6px rgba(0,0,0,0.2);
+        border: 1px solid #3ecffd;
     }
 }
 
@@ -133,6 +155,7 @@ form textarea {
     transition: all ease-in-out 0.2s;
     &:focus {
         box-shadow: 0 6px 6px 0 rgba(0,0,0,0.14), 0 3px 15px 0 rgba(0,0,0,0.12), 0 9px 3px -6px rgba(0,0,0,0.2);
+        border: 1px solid #3ecffd;
     }
 }
 
@@ -227,6 +250,20 @@ select:focus {
     }
 }
 
+.removeMsg {
+    border-top: 1px solid #ccc;
+    margin: 1rem;
+}
+
+.removeMsg input[name=removeIt] {
+    display: inline-block;
+    width: 10rem;
+    margin: .5rem;
+}
+
+#removeIt {
+    display: inline-block;
+}
 
 .disabled {
     color: #ccc;

@@ -92,7 +92,7 @@
                         value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                         value.startTime = value.startTime.slice(0,-4);
                     }
-                    output += '<p>' + value.startDate + ' ';
+                    output += '<p><span style="font-size: 1.1em;">' + (index + 1) + '. |</span> ' + value.startDate + ' ';
                     output += value.startTime + ' ';
                     if(value.endDate !== '') {
                         output += 'to ' + value.endDate;
@@ -103,6 +103,7 @@
                     output += value.message + '</p>';
                 });
                 $('#currentMessage').hide().html(output).fadeIn(300);
+                $('#tstamp').hide().html(data.timestamp);
             });
         }
 
@@ -391,12 +392,22 @@
             disableButton($('#appendMsg'));
         }
 
+        // i/o for All Clear
         function enableAllClearButton() {
             enableButton($('#allClear'));
         }
 
         function disableAllClearButton() {
             disableButton($('#allClear'));
+        }
+
+        // i/o for remove a message
+        function enableRemoveMessageButton() {
+            enableButton($('#removeIt'));
+        }
+
+        function disableRemoveMessageButton() {
+            disableButton($('#removeIt'));
         }
 
         // core button i/o
@@ -500,8 +511,10 @@
             $('input[name=empId]').on('keyup', function() {
                 if($(this).val().length == 5) {
                     enableAllClearButton();
+                    enableRemoveMessageButton();
                 } else {
                     disableAllClearButton();
+                    disableRemoveMessageButton();
                 }
             });
         }
@@ -572,6 +585,81 @@
                 valid = false;
             }
             return valid;
+        }
+
+        $('#removeIt').click(remove);
+        $('input[name=removeIt]').on('focus', function() {
+            if ($(this).hasClass('bad')) {
+                $(this).removeClass('bad');
+                $('input[name=removeIt]').attr('placeholder', '');
+            }
+        });
+        function remove() {
+            if($('input[name=empId]').val().length === 5) {
+                var tstamp = $('#tstamp').html();
+                var itmNumValid = false;
+                var postData;
+                var itmNum = parseInt($('input[name=removeIt]').val(),10) - 1;
+                $.getJSON('results.json', function(data) {
+                    if(tstamp === data.timestamp) {
+                        if(data.info.length > 1) {
+                            $.each(data.info, function(index, value) {
+                                if(itmNum === index) {
+                                    data.info.splice(index,1);
+                                    itmNumValid = true;
+                                }
+                            });
+                            if(itmNumValid) {
+                                postData = JSON.stringify(data);
+                                $.ajax({
+                                    url: 'endpoint.php',
+                                    data: {
+                                        'data': postData
+                                    },
+                                    dataType: 'json',
+                                    type: 'POST',
+                                }).done(function(data) {
+                                    console.log("success");
+                                    // do stuff with our variables
+                                    clearFields();
+                                    pageUpdate();
+                                    $('.half.two').append('<div class="good"><p>Your update has been sent!</p></div>');
+                                    dismissPlusTimer($('.good'));
+                                }).fail(function(jqXHR) {
+                                    console.error("fail");
+                                    // console.log(jqXHR);
+                                }).always(function(data) {
+                                    console.log("done");
+                                    // console.log(data);
+                                });
+                            } else {
+                                if (!$('input[name=removeIt]').hasClass('bad')) {
+                                    $('input[name=removeIt]').addClass('bad');
+                                    $('input[name=removeIt]').val('');
+                                    $('input[name=removeIt]').attr('placeholder', 'Invalid Number');
+                                }
+                            }
+                        } else {
+                            if (!$('input[name=removeIt]').hasClass('bad')) {
+                                $('input[name=removeIt]').addClass('bad');
+                                $('input[name=removeIt]').val('');
+                                $('input[name=removeIt]').attr('placeholder', 'Use All Clear');
+                            }
+                        }
+                    } else {
+                        console.log('timestamp mismatch!');
+                        var ok = confirm("Current message does not match! Click OK to reload the page with the current messages and try again.");
+                        if(confirm) {
+                            pageUpdate();
+                        }
+
+                    }
+                });
+            } else {
+                if (!$('input[name=empId]').hasClass('bad')) {
+                    $('input[name=empId]').addClass('bad');
+                }
+            }
         }
 
 
