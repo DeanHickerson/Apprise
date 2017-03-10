@@ -18,8 +18,8 @@ header {
     min-height: 15vh;
     text-align: center;
     background: #B2FEFA;
-    background: -webkit-linear-gradient(to left, #B2FEFA , #0ED2F7);
-    background: linear-gradient(to left, #B2FEFA , #0ED2F7);
+    background: -webkit-linear-gradient(to top, #B2FEFA , #0ED2F7);
+    background: linear-gradient(to top, #B2FEFA , #0ED2F7);
     h1 {
         font-size: 3.5rem;
         font-weight: 200;
@@ -109,6 +109,19 @@ table th, table td {
     border: 1px solid red;
 }
 
+.error {
+    border: 2px solid #d60e22;
+    border-radius: 4px;
+    background-color: rgba(214, 14, 34,0.37);
+    padding: .5em;
+    text-align: center;
+    cursor: pointer;
+    p {
+        margin: 0;
+        color: #7c0612;
+    }
+}
+
 form span.icon {
     display: block;
 }
@@ -159,13 +172,10 @@ form textarea {
     }
 }
 
-form input.error, form textarea.error {
-    border: 1px solid #f00;
-}
-
-form label.error {
-    color: #f00;
-    font-size: 10pt;
+.error {
+    display: block;
+    color: red;
+    font-style: italic;
 }
 
 /*

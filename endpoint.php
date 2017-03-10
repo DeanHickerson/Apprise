@@ -7,7 +7,13 @@
             // then we'll store it locally in $data
             $dataDirty = $_POST['data'];
             $data = strip_tags($dataDirty);
-            
+
+            // get the IP of the client
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $time = date('mdyH');
+            // save to file
+            save_to_ip($ip,$time);
+
             // save it to a file, pretty self-explanatory
             save_to_files($data);
 
@@ -41,6 +47,14 @@
         fclose($fp);
     }
 
+    function save_to_ip($ip,$time) {
+        $fp = fopen('iprec.txt', 'a');
+        fwrite($fp, $ip.':'.$time."\r\n");
+        fclose($fp);
+    }
+
+
+    // OLD METHOD
     function append_to_log($data) {
         // do something with $data
         // $fp = fopen('log.json', 'a');

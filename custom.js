@@ -225,7 +225,7 @@
                     // console.log(data);
                 });
             }
-        };
+        }
 
 
         function appendMessage() {
@@ -324,7 +324,7 @@
                 array.push(object);
             });
             return array;
-        }
+        };
 
 
         // checks all "textarea" elements on page, if any are blank, sets "formValid" to false, otherwise to "true"
@@ -345,14 +345,16 @@
                 // all existing textareas on page are valid, allow to add more...
                 disableAddButton();
                 disableSubmitButton();
+                disableAppendButton();
                 formValid = false;
             } else {
                 // else, enable it!
                 enableAddButton();
                 enableSubmitButton();
+                disableAppendButton();
                 formValid = true;
             }
-        };
+        }
 
         // enables the state of the Add button
         function enableAddButton() {
@@ -428,7 +430,7 @@
                     messageLength = 0; // instantiate at 0
 
                 // clone the first element
-                $dup.first().off().clone().appendTo($dup.parent()).find('.dtpicker').attr('id','').removeClass('hasDatepicker').datepicker();;
+                $dup.first().off().clone().appendTo($dup.parent()).find('.dtpicker').attr('id','').removeClass('hasDatepicker').datepicker();
 
                 // get how many "textarea"s are on the page at this moment
                 messageLength = $('textarea').length;
@@ -440,7 +442,7 @@
                     if (i == (messageLength - 1)) {
                         // get the last "message" element
                         var $message = $(e).find('textarea');
-
+                        $(e).find('input').val('');
                         // reset the message to the placeholder text
                         $message.val('').attr('placeholder', 'e.g. All Enterprise Systems and applications are operational.');
 
@@ -462,7 +464,7 @@
                 // we're always adding, so we need to enable the remove button...
                 enableRemoveButton();
             }
-        };
+        }
 
         // removes last form "message" group, unless there's only one left
         function removeLastMessage() {
@@ -474,17 +476,21 @@
                 $lastItem.remove();
                 len--;
 
+                // turn the add button back on after removing a message
+                enableAddButton();
+
                 // if there's only 1 textarea left after removing the item...
                 if (len <= 1) {
                     // ..disable the remove button
                     disableRemoveButton();
+                    enableSubmitButton();
 
                     // and re-validate all existing textareas, to set the "addButton" state
                     validateAllTextareas();
                 }
                 return;
             }
-        };
+        }
 
 
         // Lets prevent some input types in our inputs
@@ -511,11 +517,17 @@
             $('input[name=empId]').on('keyup', function() {
                 if($(this).val().length == 5) {
                     enableAllClearButton();
+                    enableAppendButton();
                     enableRemoveMessageButton();
                 } else {
                     disableAllClearButton();
+                    disableAppendButton();
                     disableRemoveMessageButton();
                 }
+            });
+            $('.clear').click(function() {
+                $(this).prev().val('');
+                $(this).fadeOut(300);
             });
         }
 
@@ -569,14 +581,43 @@
         function validate(formData) {
             var validId = false;
             var validForm = false;
+            function error(err) {
+                var output = '<div class="error"><p>' + err + '</p></div>';
+                $('.removeMsg').after(output);
+                dismissPlusTimer($('.error'));
+            }
             if(formData.msgId.length == 5) {
                 validId = true;
             }
             $.each(formData.info, function(index,value) {
-                if(value.startDate !== '' && value.startTime !== '' && value.message !== '') {
-                    validForm = true;
-                } else {
+                if(value.startDate === '' || value.startTime === '' || value.message === '') {
+                    console.log('Missing a required field');
+                    error('Missing a required field!');
                     return validForm = false;
+                } else if (value.endDate !== '' && value.endTime === '') {
+                    console.log('Need an end time when stating an end date');
+                    error('Need an end time when stating an end date!');
+                    return validForm = false;
+                } else if (value.endTime !== '') {
+                    if (value.startDate === value.endDate || value.endDate === '') {
+                        var start = value.startTime;
+                        start = start.slice(0,-4);
+                        start = parseInt(start,10);
+                        var end = value.endTime;
+                        end = end.slice(0,-4);
+                        end = parseInt(end,10);
+                        if (start > end) {
+                            console.log('time mismatch');
+                            error('Cannot have a start time greater than the end time!')
+                            return validForm = false;
+                        } else {
+                            validForm = true;
+                        }
+                    } else {
+                        validForm = true;
+                    }
+                } else {
+                    validForm = true;
                 }
             });
             if(validId && validForm && validTime) {
@@ -679,7 +720,7 @@
                 });
                 $.each(logArr, function(index,value) {
                     value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                    if(value.endDate || value.endTime != '') {
+                    if(value.endDate || value.endTime !== '') {
                         value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
                     }
                     table += '<tr>';
@@ -706,6 +747,8 @@
             validTime = false;
             disableSubmitButton();
             disableAppendButton();
+            disableAllClearButton();
+            $('.clear').hide();
         }
 
     });
