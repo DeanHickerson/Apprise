@@ -295,7 +295,9 @@
         function dismissPlusTimer($notif) {
             setTimeout(function() {
                 if($notif) {
-                    $notif.fadeOut(2000);
+                    $notif.fadeOut(2000, function() {
+                        $(this).remove();
+                    });
                 }
             },3000);
             dismissNotif($notif);
@@ -303,7 +305,9 @@
 
         function dismissNotif($notif) {
             $notif.click(function(){
-                $(this).stop().fadeOut(200);
+                $(this).stop().fadeOut(200, function() {
+                    $(this).remove();
+                });
             });
         }
 
@@ -351,7 +355,7 @@
                 // else, enable it!
                 enableAddButton();
                 enableSubmitButton();
-                disableAppendButton();
+                enableAppendButton();
                 formValid = true;
             }
         }
@@ -517,11 +521,9 @@
             $('input[name=empId]').on('keyup', function() {
                 if($(this).val().length == 5) {
                     enableAllClearButton();
-                    enableAppendButton();
                     enableRemoveMessageButton();
                 } else {
                     disableAllClearButton();
-                    disableAppendButton();
                     disableRemoveMessageButton();
                 }
             });
@@ -563,7 +565,7 @@
                 var mins = value.slice(2);
                 hours = parseInt(hours,10);
                 mins = parseInt(mins,10);
-                if((hours >= 25) || (mins >= 60)) {
+                if((hours >= 24) || (mins >= 60)) {
                     if (!$(this).hasClass('bad')) {
                         $(this).addClass('bad');
                     }
@@ -578,6 +580,17 @@
             return validTime;
         }
 
+        function evalDate(d) {
+            var date = {};
+            date.fullDate = d;
+            date.month = date.fullDate.slice(0,-8);
+            date.day = date.fullDate.slice(3,-5);
+            date.year = date.fullDate.slice(6);
+            date.number = date.year + date.month + date.day;
+            date.int = parseInt(date.number,10);
+            return date;
+        }
+
         function validate(formData) {
             var validId = false;
             var validForm = false;
@@ -590,9 +603,19 @@
                 validId = true;
             }
             $.each(formData.info, function(index,value) {
+                var startDate = evalDate(value.startDate);
+                if (value.endDate !== '') {
+                    var endDate = evalDate(value.endDate);
+                } else {
+                    var endDate = startDate.int;
+                }
                 if(value.startDate === '' || value.startTime === '' || value.message === '') {
                     console.log('Missing a required field');
                     error('Missing a required field!');
+                    return validForm = false;
+                } else if (startDate.int > endDate.int) {
+                    console.log('Cannot have a start date greater than the end date!');
+                    error('Cannot have a start date greater than the end date!')
                     return validForm = false;
                 } else if (value.endDate !== '' && value.endTime === '') {
                     console.log('Need an end time when stating an end date');

@@ -10,7 +10,7 @@
 
             // get the IP of the client
             $ip = $_SERVER['REMOTE_ADDR'];
-            $time = date('mdyH');
+            $time = date('mdyHi');
             // save to file
             save_to_ip($ip,$time);
 
