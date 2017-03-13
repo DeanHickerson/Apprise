@@ -4,9 +4,9 @@
 
 body {
     background-color: white;
-    font-family: Helvetica, Roboto, sans-serif;
+    font-family: Roboto, sans-serif;
     font-size: 16px;
-    font-weight: 200;
+    font-weight: 300;
     box-sizing: border-box;
     max-width: 100vw;
     max-height: 100vh;
@@ -19,7 +19,8 @@ header {
     text-align: center;
     background: #B2FEFA;
     background: -webkit-linear-gradient(to top, #B2FEFA , #0ED2F7);
-    background: linear-gradient(to top, #B2FEFA , #0ED2F7);
+    background: linear-gradient(to bottom, #B2FEFA , #0ED2F7);
+    box-shadow: 0 0 15px 2px rgba(0,0,0,.5);
     h1 {
         font-size: 3.5rem;
         font-weight: 200;
@@ -298,7 +299,8 @@ select:focus {
 #return-table {
     color: #404040;
     th {
-        background-color: lightblue;
+        background: #61e4e6;
+        box-shadow: inset 0 -2px 2px #ccc;
         text-align: center;
         padding: .5em;
     }

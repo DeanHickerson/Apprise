@@ -698,16 +698,16 @@
                                 });
                             } else {
                                 if (!$('input[name=removeIt]').hasClass('bad')) {
-                                    $('input[name=removeIt]').addClass('bad');
-                                    $('input[name=removeIt]').val('');
-                                    $('input[name=removeIt]').attr('placeholder', 'Invalid Number');
+                                    $('input[name=removeIt]').addClass('bad')
+                                        .val('')
+                                        .attr('placeholder','Invalid Number');
                                 }
                             }
                         } else {
                             if (!$('input[name=removeIt]').hasClass('bad')) {
-                                $('input[name=removeIt]').addClass('bad');
-                                $('input[name=removeIt]').val('');
-                                $('input[name=removeIt]').attr('placeholder', 'Use All Clear');
+                                $('input[name=removeIt]').addClass('bad')
+                                    .val('')
+                                    .attr('placeholder','Use All Clear');
                             }
                         }
                     } else {
