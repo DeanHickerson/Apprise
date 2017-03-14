@@ -67,10 +67,10 @@
 
         // When we are ready we will grab the time
         function getTime(format,dst) {
-            var rightnow = moment();
-            var curTime = moment.tz(rightNow,'America/New_York').format(format);
+            var now = moment();
+            var dateTimeNow = moment.tz(now,'America/New_York').format(format);
             zoneCheck();
-            var timestamp = curTime;
+            var timestamp = dateTimeNow;
             if(dst) {
                 timestamp += ' ' + curDST;
             }
@@ -124,7 +124,7 @@
                 var $form = $('#msgForm');
                 var msgId = $('input[name=empId]').val();
                 var formData = {};
-                var timestamp = getTime("MM/DD/YY HH:mm",true);
+                var timestamp = getTime("MM/DD/YY HH:mm:ss",true);
                 $.each(dates.regular,function(i,a){
                     if(tomorrowDate === a){
                         return formData.dateWarn = "true";
@@ -181,7 +181,7 @@
             var $form = $('#msgForm');
             var msgId = $('input[name=empId]').val();
             var formData = {};
-            var timestamp = getTime("MM/DD/YY HH:mm",true);
+            var timestamp = getTime("MM/DD/YY HH:mm:ss",true);
             $.each(dates.regular,function(i,a){
                 if(tomorrowDate === a){
                     return formData.dateWarn = "true";
@@ -231,7 +231,7 @@
         function appendMessage() {
             var msgId = $('input[name=empId]').val();
             var formData = {};
-            var timestamp = getTime("MM/DD/YY HH:mm",true);
+            var timestamp = getTime("MM/DD/YY HH:mm:ss",true);
             $.each(dates.regular,function(i,a){
                 if(tomorrowDate === a){
                     return formData.dateWarn = "true";
@@ -674,6 +674,7 @@
                                 }
                             });
                             if(itmNumValid) {
+                                data.timestamp = getTime("MM/DD/YY HH:mm:ss",true);
                                 postData = JSON.stringify(data);
                                 $.ajax({
                                     url: 'endpoint.php',
@@ -742,19 +743,21 @@
                     });
                 });
                 $.each(logArr, function(index,value) {
-                    value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
-                    if(value.endDate || value.endTime !== '') {
-                        value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                    if(index < 10) {
+                        value.startDate = value.startDate.slice(0,-4) + value.startDate.slice(8);
+                        if(value.endDate || value.endTime !== '') {
+                            value.endDate = value.endDate.slice(0,-4) + value.endDate.slice(8);
+                        }
+                        table += '<tr>';
+                        table += '<td>' + value.timestamp + '</td>';
+                        table += '<td>' + value.empId + '</td>';
+                        table += '<td>' + value.startDate + '</td>';
+                        table += '<td>' + value.startTime + '</td>';
+                        table += '<td>' + value.endDate + '</td>';
+                        table += '<td>' + value.endTime + '</td>';
+                        table += '<td>' + value.message + '</td>';
+                        table += '</tr>';
                     }
-                    table += '<tr>';
-                    table += '<td>' + value.timestamp + '</td>';
-                    table += '<td>' + value.empId + '</td>';
-                    table += '<td>' + value.startDate + '</td>';
-                    table += '<td>' + value.startTime + '</td>';
-                    table += '<td>' + value.endDate + '</td>';
-                    table += '<td>' + value.endTime + '</td>';
-                    table += '<td>' + value.message + '</td>';
-                    table += '</tr>';
                 });
                 $('#return-table tbody').hide().html(table).fadeIn(300);
             });
