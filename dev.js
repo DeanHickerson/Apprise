@@ -604,12 +604,13 @@
             }
             $.each(formData.info, function(index,value) {
                 var startDate = evalDate(value.startDate);
+                var cleanStartTime = value.startTime.slice(0,-4);
                 if (value.endDate !== '') {
                     var endDate = evalDate(value.endDate);
                 } else {
                     var endDate = startDate.int;
                 }
-                if(value.startDate === '' || value.startTime === '' || value.message === '') {
+                if(value.startDate === '' || cleanStartTime === '' || value.message === '') {
                     console.log('Missing a required field');
                     error('Missing a required field!');
                     return validForm = false;
